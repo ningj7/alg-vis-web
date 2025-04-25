@@ -1,0 +1,114 @@
+$img_url: "/img/kaiwupo.jpg";
+
+.kaiwupo {
+  position: fixed;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: 'KaiTi', 'STKaiti', 'Songti SC', serif;
+  color: #3b2e1a;
+  animation: fadeInWuxia 1s ease-in-out;
+
+  @keyframes fadeInWuxia {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .bg {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    background: url($img_url) no-repeat center center;
+    background-size: cover;
+    opacity: 0.4;
+  }
+
+  .content {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .horizontalSplit,
+  .verticalSplit {
+    height: 100%;
+    width: 100%;
+    display: flex;
+
+    &.verticalSplit {
+      flex-direction: column;
+    }
+
+    .split {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+
+      >div {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+      }
+    }
+
+    .gutter {
+      background-color: transparent;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+
+      &.gutter-horizontal {
+        cursor: col-resize;
+        width: 6px;
+      }
+
+      &.gutter-vertical {
+        cursor: row-resize;
+        height: 6px;
+      }
+    }
+  }
+
+  .sidebar {
+    border-right: 1px solid #aaa;
+    overflow-y: auto;
+    height: 100%;
+    border-radius: 0 8px 8px 0;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.05);
+  }
+
+  .visualizer {
+    border-bottom: 1px solid #bbb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    flex: 1;
+    border-radius: 8px;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.05);
+  }
+
+  .console {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+}

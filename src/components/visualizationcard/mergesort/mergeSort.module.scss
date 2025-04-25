@@ -1,0 +1,28 @@
+// mergeSort.module.scss
+
+.mergeSort {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  
+    .merge-zone {
+      stroke: #8d6e63; // 棕色边框
+      stroke-width: 2px;
+      stroke-dasharray: 6, 4;
+      fill: none;
+    }
+  
+    text {
+      font-family: "serif";
+      font-size: 14px;
+      fill: #3e2723;
+    }
+  }

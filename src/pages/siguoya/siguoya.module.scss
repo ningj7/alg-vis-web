@@ -1,0 +1,24 @@
+$img_url: "/img/siguoya.jpeg";
+
+.page {
+    position: fixed;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background: url($img_url) no-repeat;
+    background-size: cover;
+    animation: fadeInWuxia 1s ease-in-out;
+
+    @keyframes fadeInWuxia {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}

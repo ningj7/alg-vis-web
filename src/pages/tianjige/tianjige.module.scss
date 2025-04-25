@@ -1,0 +1,62 @@
+$img_url: "/img/tianjige.jpeg";
+
+.page {
+    position: fixed;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background: url($img_url) no-repeat;
+    background-size: cover;
+    animation: fadeInWuxia 1s ease-in-out;
+
+    @keyframes fadeInWuxia {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
+
+// UserTable.module.scss 新增样式
+.returnBtn {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    z-index: 999;
+
+    // 武侠风格样式
+    background: linear-gradient(to right, #8b4513, #654321);
+    border: 2px solid #d4af37;
+    border-radius: 20px;
+    color: #ffd700;
+    font-family: '华文楷体', cursive;
+    font-size: 16px;
+    padding: 8px 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+
+    // 鼠标悬停特效
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        text-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
+    }
+
+    // 激活状态
+    &:active {
+        transform: translateY(1px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    // 图标样式
+    .icon-sword {
+        margin-right: 8px;
+        filter: drop-shadow(0 0 2px #ffd700);
+    }
+}

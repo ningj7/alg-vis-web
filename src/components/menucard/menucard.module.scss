@@ -1,0 +1,32 @@
+.menuPanel {
+  padding: 16px;
+  font-family: 'KaiTi', serif;
+  color: #3b2e1a;
+  background: rgba(255, 255, 255, 0.4); // 半透明背景
+  backdrop-filter: saturate(120%) brightness(110%);
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 20px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #aaa;
+  padding-bottom: 6px;
+}
+
+:global(.ant-menu) {
+  background: transparent !important;
+  border-inline-end: none !important;
+}
+
+:global(.ant-menu-item),
+:global(.ant-menu-submenu-title) {
+  background: transparent !important;
+  color: #3b2e1a !important;
+}
+
+:global(.ant-menu-item-selected) {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  font-weight: bold;
+}

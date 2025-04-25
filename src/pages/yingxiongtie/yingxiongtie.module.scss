@@ -1,0 +1,11 @@
+$img_url: "/img/yingxiongtie.jpeg";
+
+.page{
+    position: fixed;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background: url($img_url) no-repeat;
+    background-size: cover;
+}

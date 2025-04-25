@@ -1,0 +1,69 @@
+.consolePanel {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  height: 100%;
+
+  background: rgba(255, 255, 255, 0.4); // 半透明白底
+  backdrop-filter: saturate(120%) brightness(110%);
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.inputArea {
+  margin-bottom: 12px;
+}
+
+.textarea {
+  font-family: 'KaiTi', serif;
+  font-size: 16px;
+  color: #4a2f1b;
+  background: rgba(255, 255, 255, 0.2); // 半透明背景
+  border: 1px solid rgba(139, 94, 60, 0.3); // 半透明边框
+  border-radius: 8px;
+  padding: 8px;
+  backdrop-filter: blur(6px) saturate(110%);
+  transition: all 0.3s ease;
+}
+
+.textarea:hover,
+.textarea:focus {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(180, 147, 95, 0.5);
+  box-shadow: 0 0 6px rgba(180, 147, 95, 0.3);
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 8px;
+}
+
+.wuxiaBtn {
+  font-family: 'KaiTi', serif;
+  font-weight: bold;
+  font-size: 16px;
+  color: #4a2f1b !important;
+  padding: 6px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(139, 94, 60, 0.4) !important; // 半透明边框
+  background: rgba(255, 255, 255, 0.2) !important; // 半透明白背景
+  backdrop-filter: blur(8px) saturate(120%);
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.wuxiaBtn:hover {
+  background: rgba(255, 244, 200, 0.4) !important; // 悬停时更明显的半透明金色
+  border-color: rgba(180, 147, 95, 0.6);
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.progressBar {
+  margin-top: auto;
+  padding: 8px 0;
+}
