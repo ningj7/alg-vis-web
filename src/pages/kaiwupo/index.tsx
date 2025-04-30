@@ -1,47 +1,174 @@
-import { FC, useState } from 'react';
+import { FC, useState, useRef, useEffect } from 'react';
 import Split from 'react-split';
+import { message } from 'antd';
+import { useNavigate } from 'react-router-dom';
 import MenuCard from '../../components/menucard';
 import ConsoleCard from '../../components/consolecard';
 import BubbleSort from '../../components/visualizationcard/bubblesort';
+import MergeSort from "../../components/visualizationcard/mergesort"
+import { sendMergeSortData } from '../../api/algorithm/mergesort'
+import { sendAlgorithmData } from '../../api/algorithm/bubblesort';
 import styles from './kaiwupo.module.scss';
-import type { StepResult } from '../../api/algorithm/bubblesort';
-
-// 未来会实现的可视化组件（可先留空或占位）
-// import QuickSort from '../../components/visualizationcard/quicksort';
-// import MergeSort from '../../components/visualizationcard/mergesort';
-// import BinarySearch from '../../components/visualizationcard/binarysearch';
 
 const KaiwupoPage: FC = () => {
-  const [steps, setSteps] = useState<StepResult[]>([]);
+  const [steps, setSteps] = useState<any[]>([]);
   const [currentStep, setCurrentStep] = useState(0);
-  const [algorithm, setAlgorithm] = useState('bubble'); // 默认算法为冒泡排序
+  const [totalSteps, setTotalSteps] = useState(0);
+  const [algorithm, setAlgorithm] = useState('bubble');
+  const [inputText, setInputText] = useState('');
+  const [isPlaying, setIsPlaying] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const navigate = useNavigate();
 
-  const current = steps[currentStep] ?? { values: [], curIndex: null, sortedTailIndex: -1 };
+  const stopPlaying = () => {
+    setIsPlaying(false);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+
+  const handleSubmit = async () => {
+    stopPlaying();
+
+    const nums = inputText
+      .split(',')
+      .map((s) => parseInt(s.trim(), 10))
+      .filter((n) => !isNaN(n));
+
+    if (nums.length === 0) {
+      message.error('请输入有效的数字序列');
+      return;
+    }
+
+
+
+    try {
+      let result;
+
+      if (algorithm === 'bubble') {
+        const res = await sendAlgorithmData({algorithm:'bubble', data: nums });
+        result = res.map((step: any) => ({
+          values: step.values,
+          curIndex: step.curIndex,
+          sortedTailIndex: step.sortedTailIndex,
+        }));
+      } else if (algorithm === 'merge') {
+        const res = await sendMergeSortData({ data: nums });
+        result = res.map((step: any) => ({
+          data: step.data,
+          tempData:step.tempData,
+          comparing: step.comparing,
+          mergeRange: step.mergeRange,
+        }));
+      } else {
+        message.warning('该算法暂不支持演示');
+        return;
+      }
+      if (result.length === 0) {
+        message.warning('算法未返回任何步骤');
+        return;
+      }
+
+      setSteps(result);
+      setTotalSteps(result.length);
+      setCurrentStep(0);
+
+      if (result.length > 1) {
+        setIsPlaying(true);
+        intervalRef.current = setInterval(() => {
+          setCurrentStep((prev) => {
+            const nextStep = prev + 1;
+            if (nextStep >= result.length) {
+              stopPlaying();
+              return result.length - 1;
+            }
+            return nextStep;
+          });
+        }, 800);
+      }
+    } catch (error) {
+      message.error('算法执行失败');
+    }
+  };
+
+  const handlePrev = () => {
+    if (steps.length === 0) {
+      message.info('请先输入数据');
+      return;
+    }
+
+    stopPlaying();
+    setCurrentStep((prev: number) => {
+      const next = Math.max(0, prev - 1);
+      if (prev === 0) {
+        message.info('已经是第一步');
+      }
+      return next;
+    });
+  };
+
+  const handleNext = () => {
+    if (steps.length === 0) {
+      message.info('请先输入数据');
+      return;
+    }
+
+    stopPlaying();
+    setCurrentStep((prev: number) => {
+      const next = Math.min(totalSteps - 1, prev + 1);
+      if (prev === totalSteps - 1) {
+        message.info('已经是最后一步');
+      }
+      return next;
+    });
+  };
+
+  const goHome = () => {
+    navigate('/siguoya');
+  };
+
 
   const renderVisualizer = () => {
+    const step = steps[currentStep];
+    if(!step)return null;
+
     switch (algorithm) {
+
       case 'bubble':
         return (
           <BubbleSort
-            values={current.values}
-            curIndex={current.curIndex}
-            sortedTailIndex={current.sortedTailIndex}
+            values={step.values}
+            curIndex={step.curIndex}
+            sortedTailIndex={step.sortedTailIndex}
           />
         );
-      // case 'quick':
-      //   return <QuickSort {...current} />;
-      // case 'merge':
-      //   return <MergeSort {...current} />;
-      // case 'binary':
-      //   return <BinarySearch {...current} />;
+      case 'merge':
+        return (
+          <MergeSort
+            data={step.data}
+            tempData={step.tempData}
+            comparing={step.comparing}
+            mergeRange={step.mergeRange}
+          />
+        );
       default:
         return <div style={{ color: '#fff', padding: 20 }}>该算法暂无可视化组件</div>;
     }
   };
 
+  // ⛔️切换算法时清除状态
+  useEffect(() => {
+    stopPlaying();
+    setSteps([]);
+    setCurrentStep(0);
+    setTotalSteps(0);
+    setInputText('');
+  }, [algorithm]);
+
   return (
     <div className={styles.kaiwupo}>
-      <div className={styles.bg} /> {/* 背景层 */}
+      <div className={styles.bg} />
       <div className={styles.content}>
         <Split
           className={styles.horizontalSplit}
@@ -53,7 +180,6 @@ const KaiwupoPage: FC = () => {
           <div className={styles.sidebar}>
             <MenuCard onSelect={setAlgorithm} />
           </div>
-
           <Split
             className={styles.verticalSplit}
             gutterSize={6}
@@ -66,9 +192,14 @@ const KaiwupoPage: FC = () => {
             </div>
             <div className={styles.console}>
               <ConsoleCard
-                algorithm={algorithm}
-                onStepsChange={setSteps}
-                onStepChange={setCurrentStep}
+                inputText={inputText}
+                onInputChange={setInputText}
+                onSubmit={handleSubmit}
+                onPrev={handlePrev}
+                onNext={handleNext}
+                onGoHome={goHome}
+                currentStep={currentStep}
+                totalSteps={totalSteps}
               />
             </div>
           </Split>

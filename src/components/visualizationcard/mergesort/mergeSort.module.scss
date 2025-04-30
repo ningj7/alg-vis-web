@@ -1,28 +1,17 @@
-// mergeSort.module.scss
+.mergeSortChart {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 
-.mergeSort {
+  svg {
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  
-    svg {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-  
-    .merge-zone {
-      stroke: #8d6e63; // 棕色边框
-      stroke-width: 2px;
-      stroke-dasharray: 6, 4;
-      fill: none;
-    }
-  
-    text {
-      font-family: "serif";
-      font-size: 14px;
-      fill: #3e2723;
-    }
+    max-height: 100%;
+    border: 1px solid rgba(44, 62, 80, 0.2);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(44, 62, 80, 0.15);
   }
+}

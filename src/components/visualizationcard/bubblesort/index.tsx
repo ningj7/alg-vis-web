@@ -68,7 +68,7 @@ const BubbleSort: FC<Data> = ({ values, curIndex, sortedTailIndex }) => {
       .attr("fill", (_, i) => {
         if (i >= sortedTailIndex) return "#81a784"; // 竹青
         if (curIndex !== null && (i === curIndex || i === curIndex + 1)) return "#d32f2f"; // 绯红
-        return "#2c3e50"; // 墨蓝
+        return "#90a4ae"; //青灰
       })
       .transition()
       .duration(400)

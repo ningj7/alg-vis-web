@@ -2,18 +2,14 @@ import { FC, useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import styles from "./mergeSort.module.scss";
 
-interface Item {
-  value: number;
-  position: "top" | "bottom" | "center";
+export interface MergeSortChartProps {
+  data: number[];
+  tempData?: number[] | null;
+  comparing?: number[] | null;
+  mergeRange?: [number, number] | null;
 }
 
-interface MergeSortProps {
-  data: Item[];
-  comparing: number[]; // 比较的两个元素的索引
-  mergeRange: [number, number] | null; // 当前合并区间
-}
-
-const MergeSort: FC<MergeSortProps> = ({ data, comparing, mergeRange }) => {
+const MergeSortChart: FC<MergeSortChartProps> = ({ data, tempData, comparing, mergeRange }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -22,17 +18,16 @@ const MergeSort: FC<MergeSortProps> = ({ data, comparing, mergeRange }) => {
     if (!containerRef.current) return;
 
     const observer = new ResizeObserver(() => {
-      setSize({
-        width: containerRef.current!.clientWidth,
-        height: containerRef.current!.clientHeight,
-      });
+      const width = containerRef.current!.clientWidth;
+      const height = containerRef.current!.clientHeight;
+      setSize({ width, height });
     });
 
     observer.observe(containerRef.current);
-
-    const initialWidth = containerRef.current.clientWidth;
-    const initialHeight = containerRef.current.clientHeight;
-    setSize({ width: initialWidth, height: initialHeight });
+    setSize({
+      width: containerRef.current.clientWidth,
+      height: containerRef.current.clientHeight,
+    });
 
     return () => observer.disconnect();
   }, []);
@@ -43,68 +38,119 @@ const MergeSort: FC<MergeSortProps> = ({ data, comparing, mergeRange }) => {
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
-    const padding = 40;
-    const maxContentWidth = 600;
-    const contentWidth = Math.min(maxContentWidth, size.width - padding * 2);
-    const barWidth = contentWidth / data.length;
+    const padding = 20;
+    const spacing = 18;
+    const contentWidth = Math.min(600, size.width - padding * 2);
+    const barGap = 6;
     const barCornerRadius = 6;
-    const totalHeight = size.height;
+    const barWidth = contentWidth / data.length;
 
-    const scaleY = d3.scaleLinear()
-      .domain([0, d3.max(data.map(d => d.value)) || 10])
-      .range([0, (totalHeight - 60) / 2]);
+    const isMerging = Array.isArray(mergeRange);
+    const zoneHeight = isMerging
+      ? (size.height - padding * 2 - spacing) / 2
+      : size.height - padding * 2;
 
-    svg.attr("width", size.width).attr("height", size.height);
+    const allValues = [...data.filter(v => v !== -1), ...(tempData ?? [])];
+    const maxValue = d3.max(allValues) || 1;
 
-    const group = svg.append("g").attr("transform", `translate(${(size.width - contentWidth) / 2}, 0)`);
+    const scaleY = d3.scaleLinear().domain([0, maxValue]).range([0, zoneHeight - 20]);
 
-    data.forEach((item, i) => {
-      const yOffset = item.position === "top" ? 0 : item.position === "bottom" ? totalHeight / 2 : 0;
-      const y = totalHeight - scaleY(item.value) - yOffset - 30;
+    const group = svg
+      .attr("width", size.width)
+      .attr("height", size.height)
+      .append("g")
+      .attr("transform", `translate(${(size.width - contentWidth) / 2}, ${padding})`);
 
-      const isComparing = comparing.includes(i);
+    const getColor = (index: number): string => {
+      if (comparing?.includes(index)) return "#b71c1c";
+      return "#90a4ae";
+    };
 
-      group.append("rect")
-        .attr("x", i * barWidth)
-        .attr("y", y)
-        .attr("width", barWidth - 6)
-        .attr("height", scaleY(item.value))
+    const drawBars = (
+      items: { value: number; index: number }[],
+      offsetY: number,
+      className: string,
+      fill?: string
+    ) => {
+      const filtered = items.filter(d => d.value !== -1);
+      group
+        .selectAll(`rect.${className}`)
+        .data(filtered)
+        .enter()
+        .append("rect")
+        .attr("class", className)
+        .attr("x", d => d.index * barWidth)
+        .attr("y", d => offsetY + (zoneHeight - scaleY(d.value)))
+        .attr("width", barWidth - barGap)
+        .attr("height", d => scaleY(d.value))
         .attr("rx", barCornerRadius)
-        .attr("fill", () => {
-          if (isComparing) return "#d32f2f"; // 绯红
-          if (item.position === "top") return "#2c3e50"; // 墨蓝
-          if (item.position === "bottom") return "#81a784"; // 竹青
-          return "#455a64"; // 中央灰
-        });
+        .attr("fill", d => fill ?? getColor(d.index));
 
-      group.append("text")
-        .text(item.value)
-        .attr("x", i * barWidth + (barWidth - 6) / 2)
-        .attr("y", y - 10)
+      group
+        .selectAll(`text.${className}`)
+        .data(filtered)
+        .enter()
+        .append("text")
+        .text(d => d.value)
+        .attr("x", d => d.index * barWidth + (barWidth - barGap) / 2)
+        .attr("y", d => offsetY + (zoneHeight - scaleY(d.value)) - 6)
         .attr("text-anchor", "middle")
         .attr("fill", "#3e2723")
-        .style("font-size", "14px")
+        .style("font-size", "13px")
         .style("font-family", "serif");
-    });
+    };
 
-    if (mergeRange) {
+    if (isMerging && mergeRange) {
       const [start, end] = mergeRange;
-      group.append("rect")
-        .attr("x", start * barWidth)
-        .attr("y", 0)
-        .attr("width", (end - start + 1) * barWidth)
-        .attr("height", totalHeight - 30)
+
+      drawBars(
+        data.map((value, i) => ({ value, index: i })),
+        0,
+        "top"
+      );
+
+      // ✅ 始终绘制 bottom 区域，哪怕 tempData 是空数组
+      drawBars(
+        (tempData ?? []).map((value, i) => ({
+          value,
+          index: start + i,
+        })),
+        zoneHeight + spacing,
+        "bottom",
+        "#81a784"
+      );
+
+      // 框线区域
+      const boxX = start * barWidth - 2;
+      const boxWidth = (end - start + 1) * barWidth + 4;
+      const boxY = -4;
+      const boxHeight = zoneHeight * 2 + spacing + 8;
+
+      group
+        .append("rect")
+        .attr("x", boxX)
+        .attr("y", boxY)
+        .attr("width", boxWidth)
+        .attr("height", boxHeight)
         .attr("fill", "none")
-        .attr("stroke", "#90caf9")
-        .attr("stroke-dasharray", "6,2");
+        .attr("stroke", "#5d4037")
+        .attr("stroke-width", 2)
+        .attr("stroke-dasharray", "6,3")
+        .attr("rx", 4);
+    } else {
+      drawBars(
+        data.map((value, i) => ({ value, index: i })),
+        0,
+        "center"
+      );
     }
-  }, [data, comparing, mergeRange, size]);
+  }, [data, tempData, comparing, mergeRange, size]);
 
   return (
-    <div ref={containerRef} className={styles.bubble}>
+    <div ref={containerRef} className={styles.mergeSortChart}>
       <svg ref={svgRef} />
     </div>
   );
 };
 
-export default MergeSort;
+export default MergeSortChart;
