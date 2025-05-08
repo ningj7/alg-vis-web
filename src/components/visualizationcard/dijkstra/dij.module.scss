@@ -1,0 +1,20 @@
+.dijkstraChart {
+    width: 100%;
+    height: 100%;
+  
+    svg {
+      font-family: "serif";
+    }
+  
+    text {
+      user-select: none;
+    }
+  
+    circle {
+      transition: fill 0.3s;
+    }
+  
+    line {
+      transition: stroke 0.3s, stroke-width 0.3s;
+    }
+  }

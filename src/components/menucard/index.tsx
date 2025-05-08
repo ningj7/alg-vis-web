@@ -17,9 +17,16 @@ const items: MenuProps['items'] = [
     label: '搜索算法',
     key: 'searching',
     children: [
-      { label: '二分查找', key: 'binary' },
       { label: '深度优先搜索', key: 'dfs' },
       { label: '广度优先搜索', key: 'bfs' },
+    ],
+  },
+  {
+    label: '最短路算法',
+    key: 'shortest path',
+    children: [
+      { label: 'Dijkstra', key: 'dij' },
+      { label: 'Bellman-Ford', key: 'bf' },
     ],
   },
 ];

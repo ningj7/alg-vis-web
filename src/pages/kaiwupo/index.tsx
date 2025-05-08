@@ -6,8 +6,12 @@ import MenuCard from '../../components/menucard';
 import ConsoleCard from '../../components/consolecard';
 import BubbleSort from '../../components/visualizationcard/bubblesort';
 import MergeSort from "../../components/visualizationcard/mergesort"
+import Search from "../../components/visualizationcard/search"
+import Dijkstra from '../../components/visualizationcard/dijkstra';
 import { sendMergeSortData } from '../../api/algorithm/mergesort'
 import { sendAlgorithmData } from '../../api/algorithm/bubblesort';
+import { sendGraphAlgorithm } from '../../api/algorithm/search';
+import { sendDijkstra } from '../../api/algorithm/dijkstra';
 import styles from './kaiwupo.module.scss';
 
 const KaiwupoPage: FC = () => {
@@ -46,8 +50,9 @@ const KaiwupoPage: FC = () => {
     try {
       let result;
 
+
       if (algorithm === 'bubble') {
-        const res = await sendAlgorithmData({algorithm:'bubble', data: nums });
+        const res = await sendAlgorithmData({ algorithm: 'bubble', data: nums });
         result = res.map((step: any) => ({
           values: step.values,
           curIndex: step.curIndex,
@@ -57,16 +62,36 @@ const KaiwupoPage: FC = () => {
         const res = await sendMergeSortData({ data: nums });
         result = res.map((step: any) => ({
           data: step.data,
-          tempData:step.tempData,
+          tempData: step.tempData,
           comparing: step.comparing,
           mergeRange: step.mergeRange,
         }));
-      } else {
-        message.warning('该算法暂不支持演示');
-        return;
+      } else if (algorithm === 'dfs') {
+        const res = await sendGraphAlgorithm({ count: 1, edges: [[1]], type: 0 });
+        result = res.map((step: any) => ({
+          nodes: step.nodes,
+          edges: step.edges,
+          tempEdge: step.tempEdge,
+        }));
+      } else if (algorithm === 'bfs') {
+        const res = await sendGraphAlgorithm({ count: 1, edges: [[1]], type: 1 });
+        result = res.map((step: any) => ({
+          nodes: step.nodes,
+          edges: step.edges,
+          tempEdge: step.tempEdge,
+        }));
+      } else if (algorithm === 'dij') {
+        const res = await sendDijkstra({ count: 1, edges: [[1]], start: 0 });
+        result = res.map((step: any) => ({
+          edges: step.edges,
+          dis:step.dis,
+          visited:step.visited,
+          visitedEdges:step.visitedEdges
+
+        }));
       }
-      if (result.length === 0) {
-        message.warning('算法未返回任何步骤');
+      else {
+        message.warning('该算法暂不支持演示');
         return;
       }
 
@@ -131,7 +156,7 @@ const KaiwupoPage: FC = () => {
 
   const renderVisualizer = () => {
     const step = steps[currentStep];
-    if(!step)return null;
+    if (!step) return null;
 
     switch (algorithm) {
 
@@ -152,12 +177,37 @@ const KaiwupoPage: FC = () => {
             mergeRange={step.mergeRange}
           />
         );
+      case 'dfs':
+        return (
+          <Search
+            nodes={step.nodes}
+            edges={step.edges}
+            tempEdge={step.tempEdge}
+          />
+        );
+      case 'bfs':
+        return (
+          <Search
+            nodes={step.nodes}
+            edges={step.edges}
+            tempEdge={step.tempEdge}
+          />
+        );
+      case 'dij':
+        return (
+          <Dijkstra
+            edges={step.edges}
+            dis={step.dis}
+            visited={step.visited}
+            visitedEdges={step.visitedEdges}
+          />
+        )
       default:
         return <div style={{ color: '#fff', padding: 20 }}>该算法暂无可视化组件</div>;
     }
   };
 
-  // ⛔️切换算法时清除状态
+  // 切换算法时清除状态
   useEffect(() => {
     stopPlaying();
     setSteps([]);
