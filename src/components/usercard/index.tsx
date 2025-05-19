@@ -18,7 +18,7 @@ const Comp: FC = () => {
     // 生命周期钩子函数
     useEffect(() => {
         const getAndSetUser = async () => {
-            const { code, message, data } = await GetUser(sessionStorage.getItem("userId") as string);
+            const { code, message, data } = await GetUser(sessionStorage.getItem("jwt") as string);
             if (code != 200) {
                 Info(Action.error, message);
                 return;
@@ -31,7 +31,7 @@ const Comp: FC = () => {
     // 注销
     const logout = () => {
         Info(Action.guiyin, "归隐成功~");
-        sessionStorage.removeItem("user");
+        sessionStorage.removeItem("jwt");
         setUser(null);
         navigateTo('/yingxiongtie');
     };

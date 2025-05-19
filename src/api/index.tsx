@@ -14,8 +14,10 @@ Request.interceptors.request.use(
     if (config.method === "get" && config.params) {
       let url = config.url + "?";
       for (let key of Object.keys(config.params)) {
-        if (!config.params[key]) continue;
-        url += `${key}=${encodeURIComponent(config.params[key])}&`;
+        const val = config.params[key];
+        // 跳过 undefined、null、空字符串，保留 0、false 等
+        if (val === undefined || val === null || val === '') continue;
+        url += `${key}=${encodeURIComponent(val)}&`;
       }
       config.url = url.slice(0, -1);
       config.params = {};

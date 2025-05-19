@@ -3,13 +3,13 @@ import * as d3 from "d3";
 import styles from "./mergeSort.module.scss";
 
 export interface MergeSortChartProps {
-  data: number[];
-  tempData?: number[] | null;
+  array: number[];
+  tempArray?: number[] | null;
   comparing?: number[] | null;
   mergeRange?: [number, number] | null;
 }
 
-const MergeSortChart: FC<MergeSortChartProps> = ({ data, tempData, comparing, mergeRange }) => {
+const MergeSortChart: FC<MergeSortChartProps> = ({ array, tempArray, comparing, mergeRange }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -43,14 +43,14 @@ const MergeSortChart: FC<MergeSortChartProps> = ({ data, tempData, comparing, me
     const contentWidth = Math.min(600, size.width - padding * 2);
     const barGap = 6;
     const barCornerRadius = 6;
-    const barWidth = contentWidth / data.length;
+    const barWidth = contentWidth / array.length;
 
     const isMerging = Array.isArray(mergeRange);
     const zoneHeight = isMerging
       ? (size.height - padding * 2 - spacing) / 2
       : size.height - padding * 2;
 
-    const allValues = [...data.filter(v => v !== -1), ...(tempData ?? [])];
+    const allValues = [...array.filter(v => v !== -1), ...(tempArray ?? [])];
     const maxValue = d3.max(allValues) || 1;
 
     const scaleY = d3.scaleLinear().domain([0, maxValue]).range([0, zoneHeight - 20]);
@@ -104,14 +104,14 @@ const MergeSortChart: FC<MergeSortChartProps> = ({ data, tempData, comparing, me
       const [start, end] = mergeRange;
 
       drawBars(
-        data.map((value, i) => ({ value, index: i })),
+        array.map((value, i) => ({ value, index: i })),
         0,
         "top"
       );
 
-      // ✅ 始终绘制 bottom 区域，哪怕 tempData 是空数组
+      // 始终绘制 bottom 区域，哪怕 tempData 是空数组
       drawBars(
-        (tempData ?? []).map((value, i) => ({
+        (tempArray ?? []).map((value, i) => ({
           value,
           index: start + i,
         })),
@@ -139,12 +139,12 @@ const MergeSortChart: FC<MergeSortChartProps> = ({ data, tempData, comparing, me
         .attr("rx", 4);
     } else {
       drawBars(
-        data.map((value, i) => ({ value, index: i })),
+        array.map((value, i) => ({ value, index: i })),
         0,
         "center"
       );
     }
-  }, [data, tempData, comparing, mergeRange, size]);
+  }, [array, tempArray, comparing, mergeRange, size]);
 
   return (
     <div ref={containerRef} className={styles.mergeSortChart}>

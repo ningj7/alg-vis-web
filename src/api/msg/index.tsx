@@ -1,11 +1,11 @@
 import { CSSProperties } from "react";
 import { Image, message } from "antd";
 
-export enum Action{
+export enum Action {
     navigate,
     guiyin,
     error,
-    jieyue,
+    success
 }
 
 const messageStyle: CSSProperties = {
@@ -28,10 +28,10 @@ const messageStyle: CSSProperties = {
  * @param acion——执行动作
  * @param content——输出内容
  */
-export const Info = (action : Action, content: string)=>{
+export const Info = (action: Action, content: string) => {
     // 根据执行动作映射得到不同的图标
     let iconPath: string;
-    switch (action){
+    switch (action) {
         case Action.navigate:
             iconPath = "/img/qicheng.png";
             break;
@@ -40,14 +40,13 @@ export const Info = (action : Action, content: string)=>{
             break;
         case Action.error:
             iconPath = "/img/cuowu.png";
-            break;
-        case Action.jieyue:
-            iconPath = "/img/icon-sds.jpeg";
+        case Action.success:
+            iconPath = "/img/cuowu.png";
             break;
     }
     message.info({
         content: content,
         style: messageStyle,
-        icon: <Image src={iconPath} width={27} height={30}/>,
+        icon: <Image src={iconPath} width={27} height={30} />,
     });
 };

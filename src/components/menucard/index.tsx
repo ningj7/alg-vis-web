@@ -11,6 +11,7 @@ const items: MenuProps['items'] = [
       { label: '冒泡排序', key: 'bubble' },
       { label: '快速排序', key: 'quick' },
       { label: '归并排序', key: 'merge' },
+      { label: '堆排序', key: 'heap' }
     ],
   },
   {

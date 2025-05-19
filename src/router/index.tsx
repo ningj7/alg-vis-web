@@ -46,7 +46,7 @@ const Router: FC = () => {
     const location = useLocation();
 
     // 获取登录用户信息
-    const user = sessionStorage.getItem("userId");
+    const user = sessionStorage.getItem("jwt");
     if (!user && location.pathname != "/yingxiongtie") {
         return <Navigate to="/yingxiongtie" />;
     }

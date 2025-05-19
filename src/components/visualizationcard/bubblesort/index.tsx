@@ -3,12 +3,12 @@ import * as d3 from "d3";
 import styles from "./bubbleSort.module.scss";
 
 interface Data {
-  values: number[];
+  array: number[];
   curIndex: number | null;
   sortedTailIndex: number;
 }
 
-const BubbleSort: FC<Data> = ({ values, curIndex, sortedTailIndex }) => {
+const BubbleSort: FC<Data> = ({ array, curIndex, sortedTailIndex }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -42,11 +42,11 @@ const BubbleSort: FC<Data> = ({ values, curIndex, sortedTailIndex }) => {
     const padding = 40;
     const maxContentWidth = 600;
     const contentWidth = Math.min(maxContentWidth, size.width - padding * 2);
-    const barWidth = contentWidth / values.length;
+    const barWidth = contentWidth / array.length;
     const barCornerRadius = 6;
 
     const scaleY = d3.scaleLinear()
-      .domain([0, d3.max(values) || 10])
+      .domain([0, d3.max(array) || 10])
       .range([0, size.height - 60]);
 
     svg
@@ -57,7 +57,7 @@ const BubbleSort: FC<Data> = ({ values, curIndex, sortedTailIndex }) => {
       .attr("transform", `translate(${(size.width - contentWidth) / 2}, 0)`);
 
     group.selectAll("rect")
-      .data(values)
+      .data(array)
       .enter()
       .append("rect")
       .attr("x", (_, i) => i * barWidth)
@@ -76,7 +76,7 @@ const BubbleSort: FC<Data> = ({ values, curIndex, sortedTailIndex }) => {
       .attr("x", (_, i) => i * barWidth);
 
     group.selectAll("text")
-      .data(values)
+      .data(array)
       .enter()
       .append("text")
       .text(d => d)
@@ -87,7 +87,7 @@ const BubbleSort: FC<Data> = ({ values, curIndex, sortedTailIndex }) => {
       .style("font-size", "14px")
       .style("font-family", "serif");
 
-  }, [values, curIndex, sortedTailIndex, size]);
+  }, [array, curIndex, sortedTailIndex, size]);
 
   return (
     <div ref={containerRef} className={styles.bubble}>

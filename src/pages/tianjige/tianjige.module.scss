@@ -3,11 +3,15 @@ $img_url: "/img/tianjige.jpeg";
 .page {
     position: fixed;
     inset: 0;
-    height: 100%;
     width: 100%;
+    height: 100%;
     overflow: hidden;
-    background: url($img_url) no-repeat;
+    background: url($img_url) no-repeat center center;
     background-size: cover;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px; // ✅ 由 60px 减少为 20px
     animation: fadeInWuxia 1s ease-in-out;
 
     @keyframes fadeInWuxia {
@@ -15,7 +19,6 @@ $img_url: "/img/tianjige.jpeg";
             opacity: 0;
             transform: translateY(10px);
         }
-
         to {
             opacity: 1;
             transform: translateY(0);
@@ -23,40 +26,45 @@ $img_url: "/img/tianjige.jpeg";
     }
 }
 
-// UserTable.module.scss 新增样式
+.title {
+    color: rgba(255, 255, 255, 0.85);
+    font-family: '华文楷体', cursive;
+    font-size: 40px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+    margin-bottom: 12px; // ✅ 稍微减小空隙，保持紧凑优雅
+}
+
+.cardWrapper {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow: auto;
+}
+
 .returnBtn {
     position: fixed;
     bottom: 40px;
     right: 40px;
     z-index: 999;
-
-    // 武侠风格样式
-    background: linear-gradient(to right, #8b4513, #654321);
-    border: 2px solid #d4af37;
+    background-color: #3b2f2f;
+    border: 1px solid #a8936d;
     border-radius: 20px;
-    color: #ffd700;
-    font-family: '华文楷体', cursive;
+    color: #e6d4a3;
+    font-family: 'KaiTi', cursive;
     font-size: 16px;
-    padding: 8px 24px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    padding: 8px 20px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
     transition: all 0.3s ease;
 
-    // 鼠标悬停特效
     &:hover {
+        background-color: #2f2727;
+        color: #f5e2b3;
         transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-        text-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
     }
 
-    // 激活状态
-    &:active {
-        transform: translateY(1px);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    }
-
-    // 图标样式
     .icon-sword {
         margin-right: 8px;
-        filter: drop-shadow(0 0 2px #ffd700);
+        font-size: 18px;
     }
 }

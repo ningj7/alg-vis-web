@@ -6,12 +6,15 @@ import MenuCard from '../../components/menucard';
 import ConsoleCard from '../../components/consolecard';
 import BubbleSort from '../../components/visualizationcard/bubblesort';
 import MergeSort from "../../components/visualizationcard/mergesort"
+import HeapSort from "../../components/visualizationcard/heapsort"
 import Search from "../../components/visualizationcard/search"
 import Dijkstra from '../../components/visualizationcard/dijkstra';
 import { sendMergeSortData } from '../../api/algorithm/mergesort'
 import { sendAlgorithmData } from '../../api/algorithm/bubblesort';
 import { sendGraphAlgorithm } from '../../api/algorithm/search';
 import { sendDijkstra } from '../../api/algorithm/dijkstra';
+import { sendHeapSort } from '../../api/algorithm/heapsort';
+import { parseInputForSort } from '../../utils';
 import styles from './kaiwupo.module.scss';
 
 const KaiwupoPage: FC = () => {
@@ -49,20 +52,28 @@ const KaiwupoPage: FC = () => {
 
     try {
       let result;
-
-
       if (algorithm === 'bubble') {
-        const res = await sendAlgorithmData({ algorithm: 'bubble', data: nums });
+        const input = parseInputForSort(inputText);
+        if (!input) {
+          message.error('输入格式有误，请确保第一行为数字数量，第二行为空格分隔的数字');
+          return;
+        }
+        const res = await sendAlgorithmData({ num: input.num, array: input.array });
         result = res.map((step: any) => ({
-          values: step.values,
+          array: step.array,
           curIndex: step.curIndex,
           sortedTailIndex: step.sortedTailIndex,
         }));
       } else if (algorithm === 'merge') {
-        const res = await sendMergeSortData({ data: nums });
+        const input = parseInputForSort(inputText);
+        if (!input) {
+          message.error('输入格式有误，请确保第一行为数字数量，第二行为空格分隔的数字');
+          return;
+        }
+        const res = await sendMergeSortData({ num: input.num, array: input.array });
         result = res.map((step: any) => ({
-          data: step.data,
-          tempData: step.tempData,
+          array: step.array,
+          tempArray: step.tempArray,
           comparing: step.comparing,
           mergeRange: step.mergeRange,
         }));
@@ -84,11 +95,18 @@ const KaiwupoPage: FC = () => {
         const res = await sendDijkstra({ count: 1, edges: [[1]], start: 0 });
         result = res.map((step: any) => ({
           edges: step.edges,
-          dis:step.dis,
-          visited:step.visited,
-          visitedEdges:step.visitedEdges
+          dis: step.dis,
+          visited: step.visited,
+          visitedEdges: step.visitedEdges
 
         }));
+      } else if (algorithm == 'heap') {
+        const res = await sendHeapSort({ data: [1] });
+        result = res.map((step: any) => ({
+          data: step.data,
+          comparingId: step.comparingId,
+          sortedIndex: step.sortedIndex
+        }))
       }
       else {
         message.warning('该算法暂不支持演示');
@@ -113,6 +131,7 @@ const KaiwupoPage: FC = () => {
         }, 800);
       }
     } catch (error) {
+      console.error('出错信息:', error);
       message.error('算法执行失败');
     }
   };
@@ -163,7 +182,7 @@ const KaiwupoPage: FC = () => {
       case 'bubble':
         return (
           <BubbleSort
-            values={step.values}
+            array={step.array}
             curIndex={step.curIndex}
             sortedTailIndex={step.sortedTailIndex}
           />
@@ -171,12 +190,20 @@ const KaiwupoPage: FC = () => {
       case 'merge':
         return (
           <MergeSort
-            data={step.data}
-            tempData={step.tempData}
+            array={step.array}
+            tempArray={step.tempArray}
             comparing={step.comparing}
             mergeRange={step.mergeRange}
           />
         );
+      case 'heap':
+        return (
+          <HeapSort
+            data={step.data}
+            comparingId={step.comparingId}
+            sortedIndex={step.sortedIndex}
+          />
+        )
       case 'dfs':
         return (
           <Search

@@ -1,9 +1,8 @@
-// src/components/UserTable/index.tsx
 import { FC, useState, useEffect } from 'react';
 import { Table, Tag, Image, Popconfirm, Input, Select, Button } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { Info, Action } from '../../api/msg';
-import { GetUsers, User, UserStatus } from '../../api/usertable';
+import { GetUsers, User } from '../../api/usertable';
 import styles from './UserTable.module.scss';
 
 const { Option } = Select;
@@ -20,13 +19,14 @@ const UserTable: FC = () => {
     const [data, setData] = useState<User[]>([]);
     const [loading, setLoading] = useState(false);
     const [searchParams, setSearchParams] = useState({
-        nickname: '',
-        role: 'all'
+        nickName: '',
+        account: '',
+        status: ''
     });
     const [tableParams, setTableParams] = useState<TableParams>({
         pagination: {
             current: 1,
-            pageSize: 8,
+            pageSize: 3,
             total: 0
         },
     });
@@ -35,20 +35,20 @@ const UserTable: FC = () => {
         setLoading(true);
         try {
             const res = await GetUsers({
-                page: tableParams.pagination.current,
+                pageNo: tableParams.pagination.current,
                 pageSize: tableParams.pagination.pageSize,
                 ...searchParams
             });
 
-            setData(res.data);
-            setTableParams({
+            setData(res.data.list || []);
+            setTableParams(prev => ({
                 pagination: {
-                    ...tableParams.pagination,
-                    total: res.total || 0,
+                    ...prev.pagination,
+                    total: res.data.total || 0,
                 },
-            });
+            }));
         } catch (err) {
-            Info(Action.jieyue, '获取用户列表失败');
+            Info(Action.error, '获取用户列表失败');
         } finally {
             setLoading(false);
         }
@@ -56,15 +56,15 @@ const UserTable: FC = () => {
 
     useEffect(() => {
         fetchData();
-    }, [tableParams.pagination.current, searchParams]);
+    }, [tableParams.pagination.current]);
 
     const handleTableChange = (pagination: any) => {
         setTableParams({ pagination });
     };
 
-    const getStatusColor = (status: UserStatus) => {
-        return status === UserStatus.Normal ? 'green' : 'volcano';
-    };
+    const getStatusColor = (status: number) => status === 0 ? '#52c41a' : '#cf1322';
+    const getRoleColor = (role: number) => role === 0 ? '#d48806' : '#2f54eb';
+    const getGenderColor = (gender: number) => gender === 0 ? '#1890ff' : '#eb2f96';
 
     const columns: ColumnsType<User> = [
         {
@@ -85,23 +85,34 @@ const UserTable: FC = () => {
         {
             title: '武林称号',
             dataIndex: 'nickName',
-            width: 100,
             key: 'nickName',
+            width: 100,
             render: (text: string) => <span className={styles.nickname}>「{text}」</span>,
         },
         {
-            title: '门派令牌',
-            dataIndex: 'studentNumber',
-            key: 'studentNumber',
+            title: '性别',
+            key: 'gender',
             width: 100,
+            render: (_, record) => (
+                <Tag color={getGenderColor(record.gender)} className={styles.statusTag}>
+                    {record.gender === 0 ? '男' : '女'}
+                </Tag>
+            ),
+        },
+        {
+            title: '门派令牌',
+            dataIndex: 'account',
+            key: 'account',
+            width: 100,
+            render: (text: string) => <span className={styles.account}>{text}</span>,
         },
         {
             title: '角色',
             key: 'role',
             width: 100,
             render: (_, record) => (
-                <Tag color={getStatusColor(record.status)} className={styles.statusTag}>
-                    {record.status === UserStatus.Normal ? '宗主' : '弟子'}
+                <Tag color={getRoleColor(record.role)} className={styles.statusTag}>
+                    {record.role === 0 ? '宗主' : '弟子'}
                 </Tag>
             ),
         },
@@ -111,7 +122,7 @@ const UserTable: FC = () => {
             width: 100,
             render: (_, record) => (
                 <Tag color={getStatusColor(record.status)} className={styles.statusTag}>
-                    {record.status === UserStatus.Normal ? '正常' : '异常'}
+                    {record.status === 0 ? '正常' : '异常'}
                 </Tag>
             ),
         },
@@ -122,7 +133,7 @@ const UserTable: FC = () => {
             render: (_, record) => (
                 <Popconfirm
                     title={`确定要对${record.nickName}施展易容术？`}
-                    onConfirm={() => Info(Action.jieyue, `开始修改 ${record.nickName}`)}
+                    onConfirm={() => Info(Action.success, `开始修改 ${record.nickName}`)}
                     okText="确认"
                     cancelText="取消"
                     overlayClassName={styles.popconfirmOverlay}
@@ -135,33 +146,51 @@ const UserTable: FC = () => {
 
     return (
         <div className={styles.container}>
-            {/* 搜索区域 */}
             <div className={styles.searchHeader}>
-                <Input
-                    className={styles.searchInput}
-                    placeholder="输入侠客名"
-                    onChange={e => setSearchParams({ ...searchParams, nickname: e.target.value })}
-                />
-
-                <Select
-                    className={styles.roleSelect}
-                    defaultValue="all"
-                    onChange={value => setSearchParams({ ...searchParams, role: value })}
-                >
-                    <Option value="all">所有角色</Option>
-                    <Option value="admin">掌门</Option>
-                    <Option value="member">弟子</Option>
-                </Select>
-
+                <div className={styles.searchFields}>
+                    <Input
+                        placeholder="输入侠客名"
+                        value={searchParams.nickName}
+                        onChange={e =>
+                            setSearchParams({ ...searchParams, nickName: e.target.value })
+                        }
+                        className={styles.searchField}
+                    />
+                    <Input
+                        placeholder="输入门派令牌"
+                        value={searchParams.account}
+                        onChange={e =>
+                            setSearchParams({ ...searchParams, account: e.target.value })
+                        }
+                        className={styles.searchField}
+                    />
+                    <Select
+                        value={searchParams.status}
+                        onChange={value => setSearchParams({ ...searchParams, status: value })}
+                        className={styles.searchField}
+                    >
+                        <Option value="">所有状态</Option>
+                        <Option value={0}>正常</Option>
+                        <Option value={1}>异常</Option>
+                    </Select>
+                </div>
                 <Button
                     className={styles.searchButton}
-                    onClick={fetchData}
+                    onClick={() => {
+                        setTableParams(prev => ({
+                            ...prev,
+                            pagination: {
+                                ...prev.pagination,
+                                current: 1,
+                            },
+                        }));
+                        fetchData();
+                    }}
                 >
                     搜索侠客
                 </Button>
             </div>
 
-            {/* 数据表格 */}
             <Table<User>
                 columns={columns}
                 rowKey="id"

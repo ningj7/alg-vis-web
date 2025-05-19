@@ -1,4 +1,3 @@
-// src/components/UserTable/UserTable.module.scss
 @use "sass:color";
 
 $sword-black: #2e2e2e;
@@ -6,10 +5,7 @@ $bamboo-green: #5c8d89;
 $blood-red: #c53d43;
 $parchment: #f5f1e5;
 
-
 .container {
-  background: rgba($parchment, 0.35);
-  backdrop-filter: blur(12px);
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 12px rgba($sword-black, 0.18);
@@ -20,54 +16,56 @@ $parchment: #f5f1e5;
 }
 
 .searchHeader {
-  display: grid;
-  grid-template-columns: 1fr 1fr auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
   gap: 15px;
   margin-bottom: 25px;
-  align-items: center;
 }
 
-.searchInput {
-  background: rgba(255, 255, 255, 0.5);
-  border: 1.5px solid rgba($bamboo-green, 0.25);
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-family: 'Kaiti';
-  font-style: oblique 15deg;
-  color: rgba($sword-black, 0.9);
-  transition: all 0.3s;
-
-  &:focus {
-    border-color: rgba($blood-red, 0.7);
-    box-shadow: 0 0 8px rgba($blood-red, 0.15);
-    background: rgba(255, 255, 255, 0.7);
-  }
+.searchFields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  flex: 1;
+  min-width: 0;
 }
 
-.roleSelect {
+// ✅ 统一搜索输入框和选择框样式
+.searchField {
+  flex: 1 1 200px;
+
   :global {
+
+    .ant-input,
     .ant-select-selector {
-      background: rgba(255, 255, 255, 0.3) !important;
+      width: 100% !important;
+      height: 38px !important;
       border: 1.5px solid rgba($bamboo-green, 0.3) !important;
       border-radius: 6px !important;
       font-family: 'Kaiti' !important;
-      color: rgba($sword-black, 0.8) !important;
+      font-style: oblique 15deg;
+      color: rgba($sword-black, 0.9) !important;
+      padding: 6px 12px !important;
+      background: rgba(255, 255, 255, 0.85);
     }
   }
 }
 
 .searchButton {
-  background: rgba($blood-red, 0.25);
   border: none !important;
   border-radius: 6px !important;
-  color: rgba($parchment, 0.9) !important;
+  color: rgba($parchment, 0.95) !important;
+  background: rgba($blood-red, 0.6) !important;
   font-family: 'Kaiti';
   font-weight: bold;
   letter-spacing: 1px;
   transition: all 0.3s;
+  padding: 8px 16px;
 
   &:hover {
-    background: rgba($blood-red, 0.45) !important;
+    background: rgba($blood-red, 0.75) !important;
     transform: translateY(-1px);
   }
 }
@@ -77,26 +75,18 @@ $parchment: #f5f1e5;
     .ant-table {
       background: transparent;
 
-      &-thead > tr > th {
-        background: linear-gradient(
-          rgba($sword-black, 0.55),
-          color.scale(rgba($sword-black, 0.65), $lightness: 3%)
-        ) !important;
+      &-thead>tr>th {
+        background: linear-gradient(rgba($sword-black, 0.55),
+            color.scale(rgba($sword-black, 0.65), $lightness: 3%)) !important;
         color: rgba($parchment, 0.95) !important;
         font-family: '华文行楷', cursive;
         border-bottom: 2px solid rgba($blood-red, 0.8) !important;
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
       }
 
-      &-tbody > tr {
-        background: rgba(255, 255, 255, 0.25);
-        transition: all 0.3s;
-
-        &:hover {
-          transform: translateX(5px);
-          background: rgba(255, 255, 255, 0.4) !important;
-          box-shadow: 2px 0 8px rgba($bamboo-green, 0.08);
-        }
+      // ✅ 去除悬停变色
+      &-tbody>tr:hover {
+        background: transparent !important;
       }
     }
 
@@ -105,7 +95,7 @@ $parchment: #f5f1e5;
         border: 1px solid rgba($bamboo-green, 0.3);
         border-radius: 4px !important;
         background: rgba(255, 255, 255, 0.3);
-        
+
         a {
           color: rgba($sword-black, 0.8);
         }
@@ -113,7 +103,7 @@ $parchment: #f5f1e5;
         &-active {
           background: rgba($blood-red, 0.7) !important;
           border-color: rgba($blood-red, 0.8) !important;
-          
+
           a {
             color: rgba($parchment, 0.95) !important;
           }
@@ -143,6 +133,33 @@ $parchment: #f5f1e5;
   letter-spacing: 0.5px;
 }
 
+.account {
+  font-family: 'Kaiti';
+  font-size: 14px;
+  color: rgba($parchment, 0.95);
+  background: linear-gradient(
+    to bottom,
+    #bfa76f,
+    #8c6b28
+  );
+  padding: 6px 10px;
+  clip-path: polygon(
+    50% 0%,     // 顶尖
+    90% 15%,    // 右上斜边
+    100% 50%,   // 右中
+    90% 85%,    // 右下斜边
+    50% 100%,   // 底尖
+    10% 85%,    // 左下斜边
+    0% 50%,     // 左中
+    10% 15%     // 左上斜边
+  );
+  border: 1.2px solid #a87c3a;
+  text-align: center;
+  display: inline-block;
+  min-width: 48px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 .actionBtn {
   background: none;
   border: 1px solid rgba($bamboo-green, 0.4);
@@ -153,12 +170,6 @@ $parchment: #f5f1e5;
   transition: all 0.3s;
   font-family: 'Kaiti';
 
-  &:hover {
-    background: rgba($bamboo-green, 0.2);
-    color: rgba($parchment, 0.9);
-    transform: rotate(-2deg);
-    border-color: rgba($bamboo-green, 0.6);
-  }
 }
 
 .previewMask {
@@ -170,13 +181,13 @@ $parchment: #f5f1e5;
   font-family: 'Kaiti' !important;
   background: rgba(255, 255, 255, 0.85) !important;
   border-radius: 8px !important;
-  
+
   .ant-popconfirm-message {
     color: rgba($sword-black, 0.8) !important;
     font-style: oblique 15deg;
     text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.1);
   }
-  
+
   .ant-popconfirm-buttons button {
     background: rgba($bamboo-green, 0.15) !important;
     border: 1px solid rgba($bamboo-green, 0.3) !important;
