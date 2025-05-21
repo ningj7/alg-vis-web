@@ -27,9 +27,16 @@ const items: MenuProps['items'] = [
     key: 'shortest path',
     children: [
       { label: 'Dijkstra', key: 'dij' },
-      { label: 'Bellman-Ford', key: 'bf' },
     ],
   },
+  {
+    label: '最小生成树算法',
+    key: 'minimum spanning tree',
+    children: [
+      { label: 'Prim', key: 'prim' },
+      { label: 'Kruskal', key: 'Kruskal' },
+    ],
+  }
 ];
 
 interface Props {

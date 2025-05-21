@@ -14,6 +14,11 @@ interface ShortestPathInput {
     start: number; // 起点编号
 }
 
+interface SpanningTreeInput {
+    num:number;
+    edges: Record<number, number[][]>;
+}
+
 export const parseInputForSort = (input: string): SortInput | null => {
     const lines = input.trim().split('\n').map(line => line.trim()).filter(line => line !== '');
     if (lines.length < 2) return null;
@@ -109,4 +114,45 @@ export const parseInputForShortestPath = (input: string): ShortestPathInput | nu
     }
 
     return { num, edges, start };
+};
+
+export const parseInputForSpanningTree = (input: string): SpanningTreeInput | null => {
+    const lines = input.trim().split('\n').map(line => line.trim()).filter(line => line !== '');
+    if (lines.length < 2) return null;
+
+    const [numStr, mStr] = lines[0].split(/\s+/);
+    const num = parseInt(numStr, 10);
+    const m = parseInt(mStr, 10);
+
+    if (!Number.isInteger(num) || !Number.isInteger(m) || num <= 0 || m < 0 || lines.length !== m + 1) {
+        return null;
+    }
+
+    const edges: Record<number, number[][]> = {};
+
+    for (let i = 1; i <= m; i++) {
+        const [uStr, vStr, wStr] = lines[i].split(/\s+/);
+        const u = parseInt(uStr, 10);
+        const v = parseInt(vStr, 10);
+        const w = parseInt(wStr, 10);
+
+        if (![u, v, w].every(n => Number.isInteger(n)) || u < 0 || v < 0 || u >= num || v >= num || w < 0) {
+            return null;
+        }
+
+        if (!edges[u]) edges[u] = [];
+        if (!edges[v]) edges[v] = []; // 因为是无向边
+
+        edges[u].push([v, w]);
+        edges[v].push([u, w]);
+    }
+
+    // 确保每个点都有定义
+    for (let i = 0; i < num; i++) {
+        if (!edges[i]) {
+            edges[i] = [];
+        }
+    }
+
+    return { num, edges };
 };

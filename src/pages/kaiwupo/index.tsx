@@ -9,12 +9,14 @@ import MergeSort from "../../components/visualizationcard/mergesort"
 import HeapSort from "../../components/visualizationcard/heapsort"
 import Search from "../../components/visualizationcard/search"
 import Dijkstra from '../../components/visualizationcard/dijkstra';
+import SpanningTree from '../../components/visualizationcard/spanningtree';
 import { sendMergeSortData } from '../../api/algorithm/mergesort'
 import { sendAlgorithmData } from '../../api/algorithm/bubblesort';
 import { sendGraphAlgorithm } from '../../api/algorithm/search';
 import { sendDijkstra } from '../../api/algorithm/dijkstra';
 import { sendHeapSort } from '../../api/algorithm/heapsort';
-import { parseInputForSearch, parseInputForShortestPath, parseInputForSort } from '../../utils';
+import { sendSpanningTree } from '../../api/algorithm/spanningTree';
+import { parseInputForSearch, parseInputForShortestPath, parseInputForSort, parseInputForSpanningTree } from '../../utils';
 import styles from './kaiwupo.module.scss';
 
 const KaiwupoPage: FC = () => {
@@ -126,7 +128,33 @@ const KaiwupoPage: FC = () => {
           array: step.array,
           comparingId: step.comparingId,
           sortedIndex: step.sortedIndex
-        }))
+        }));
+      } else if (algorithm == 'prim') {
+        const input = parseInputForSpanningTree(inputText);
+        if (!input) {
+          message.error('输入格式有误，请确保第一行为点数量、边数量，第二行为空格分隔的数字');
+          return;
+        }
+        const res = await sendSpanningTree({ num: input.num, edges: input.edges, type: 1 });
+        result = res.map((step: any) => ({
+          edges: step.edges,
+          visited: step.visited,
+          edgeStatus: step.edgeStatus,
+          totalWeight: step.totalWeight
+        }));
+      } else if (algorithm == 'kruskal') {
+        const input = parseInputForSpanningTree(inputText);
+        if (!input) {
+          message.error('输入格式有误，请确保第一行为点数量、边数量，第二行为空格分隔的数字');
+          return;
+        }
+        const res = await sendSpanningTree({ num: input.num, edges: input.edges, type: 2 });
+        result = res.map((step: any) => ({
+          edges: step.edges,
+          visited: step.visited,
+          edgeStatus: step.edgeStatus,
+          totalWeight: step.totalWeight
+        }));
       }
       else {
         message.warning('该算法暂不支持演示');
@@ -248,7 +276,25 @@ const KaiwupoPage: FC = () => {
             visited={step.visited}
             visitedEdges={step.visitedEdges}
           />
-        )
+        );
+      case 'prim':
+        return (
+          <SpanningTree
+            edges={step.edges}
+            visited={step.visited}
+            edgeStatus={step.edgeStatus}
+            totalWeight={step.totalWeight}
+          />
+        );
+        case 'kruskal':
+          return (
+            <SpanningTree
+              edges={step.edges}
+              visited={step.visited}
+              edgeStatus={step.edgeStatus}
+              totalWeight={step.totalWeight}
+            />
+          );
       default:
         return <div style={{ color: '#fff', padding: 20 }}>该算法暂无可视化组件</div>;
     }
