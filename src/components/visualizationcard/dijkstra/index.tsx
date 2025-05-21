@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import styles from "./dij.module.scss";
 
 export interface DijkstraProps {
-    edges: number[][];
+    edges: Record<number, number[][]>; 
     dis?: number[];
     visited?: number[];
     visitedEdges?: number[];
@@ -53,8 +53,15 @@ const Dijkstra: FC<DijkstraProps> = ({
         const contentWidth = size.width - margin.left - margin.right;
         const contentHeight = size.height - margin.top - margin.bottom;
 
-        const nodeCount = edges.length;
-        const nodes = Array.from({ length: nodeCount }, (_, i) => ({ id: i }));
+        const nodeSet = new Set<number>();
+        Object.keys(edges).forEach(fromStr => {
+            const from = Number(fromStr);
+            nodeSet.add(from);
+            edges[from].forEach(([to]) => nodeSet.add(to));
+        });
+        const nodeList = Array.from(nodeSet).sort((a, b) => a - b);
+        const nodes = nodeList.map(id => ({ id }));
+
         const links: {
             source: number;
             target: number;
@@ -62,14 +69,13 @@ const Dijkstra: FC<DijkstraProps> = ({
             color: string;
         }[] = [];
 
-        for (let i = 0; i < nodeCount; i++) {
-            for (let j = 0; j < nodeCount; j++) {
-                if (edges[i][j] > 0) {
-                    const isVisited =
-                        visitedEdge && visitedEdge.from === i && visitedEdge.to === j;
-                    const color = isVisited ? "#f57f17" : "#78909c";
-                    links.push({ source: i, target: j, weight: edges[i][j], color });
-                }
+        for (const fromStr in edges) {
+            const from = Number(fromStr);
+            for (const [to, weight] of edges[from]) {
+                const isVisited =
+                    visitedEdge && visitedEdge.from === from && visitedEdge.to === to;
+                const color = isVisited ? "#f57f17" : "#78909c";
+                links.push({ source: from, target: to, weight, color });
             }
         }
 
@@ -240,7 +246,7 @@ const Dijkstra: FC<DijkstraProps> = ({
             .attr("fill", "#263238")
             .style("font-size", "14px")
             .text(d =>
-                dis[d.id] === Infinity || dis[d.id] === undefined ? "∞" : dis[d.id]
+                dis[d.id] === 2147483647 || dis[d.id] === undefined ? "∞" : dis[d.id]
             );
     }, [edges, dis, visited, visitedEdges, size]);
 

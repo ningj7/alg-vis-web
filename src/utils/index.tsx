@@ -3,6 +3,17 @@ interface SortInput {
     array: number[];
 }
 
+interface SearchInput {
+    num: number;
+    edges: Record<number, number[]>;
+}
+
+interface ShortestPathInput {
+    num: number;
+    edges: Record<number, number[][]>;
+    start: number; // 起点编号
+}
+
 export const parseInputForSort = (input: string): SortInput | null => {
     const lines = input.trim().split('\n').map(line => line.trim()).filter(line => line !== '');
     if (lines.length < 2) return null;
@@ -16,4 +27,86 @@ export const parseInputForSort = (input: string): SortInput | null => {
     }
 
     return { num, array };
+};
+
+export const parseInputForSearch = (input: string): SearchInput | null => {
+    const lines = input.trim().split('\n').map(line => line.trim()).filter(line => line !== '');
+    if (lines.length < 2) return null;
+
+    const num = parseInt(lines[0], 10);
+    if (!Number.isInteger(num) || num <= 0 || lines.length !== num) return null;
+
+    const edges: Record<number, number[]> = {};
+
+    for (let i = 1; i < lines.length; i++) {
+        const [fromStr, toStr] = lines[i].split(/\s+/);
+        const from = parseInt(fromStr, 10);
+        const to = parseInt(toStr, 10);
+
+        if (![from, to].every(n => Number.isInteger(n) && n >= 0 && n < num)) {
+            return null;
+        }
+
+        if (!edges[from]) {
+            edges[from] = [];
+        }
+
+        edges[from].push(to);
+    }
+
+    // 保证每个点都有定义（即使没有出边）
+    for (let i = 0; i < num; i++) {
+        if (!edges[i]) {
+            edges[i] = [];
+        }
+    }
+
+    return { num, edges };
+};
+
+export const parseInputForShortestPath = (input: string): ShortestPathInput | null => {
+    const lines = input.trim().split('\n').map(line => line.trim()).filter(line => line !== '');
+    if (lines.length < 2) return null;
+
+    const [numStr, _mStr, startStr] = lines[0].split(/\s+/);
+    const num = parseInt(numStr, 10);
+    const m = parseInt(_mStr, 10);
+    const start = parseInt(startStr, 10);
+    console.log(num, m, start);
+    console.log(lines.length);
+
+    if (!Number.isInteger(num) || num <= 0 || !Number.isInteger(start) || start < 0 || start >= num || lines.length !== m + 1) {
+        return null;
+    }
+
+    const edges: Record<number, number[][]> = {};
+
+    for (let i = 1; i < lines.length; i++) {
+        const [fromStr, toStr, weightStr] = lines[i].split(/\s+/);
+        const from = parseInt(fromStr, 10);
+        const to = parseInt(toStr, 10);
+        const weight = parseInt(weightStr, 10);
+
+        if (![from, to, weight].every(n => Number.isInteger(n))) {
+            return null;
+        }
+        if (from < 0 || from >= num || to < 0 || to >= num || weight < 0) {
+            return null;
+        }
+
+        if (!edges[from]) {
+            edges[from] = [];
+        }
+
+        edges[from].push([to, weight]);
+    }
+
+    // 确保每个点都定义（即使没有出边）
+    for (let i = 0; i < num; i++) {
+        if (!edges[i]) {
+            edges[i] = [];
+        }
+    }
+
+    return { num, edges, start };
 };

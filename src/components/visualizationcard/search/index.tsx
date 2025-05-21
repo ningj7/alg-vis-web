@@ -4,8 +4,8 @@ import styles from "./search.module.scss";
 
 export interface GraphProps {
   nodes: number[]; // 0: 未访问, 1: 已访问
-  edges: number[][]; // 邻接矩阵
-  tempEdge?: [number, number] | null; // 当前尝试访问的边
+  edges: Record<number, number[]>; // 邻接表
+  tempEdge?: [number, number] | null;
 }
 
 interface TreeNode {
@@ -14,6 +14,9 @@ interface TreeNode {
 }
 
 const Search: FC<GraphProps> = ({ nodes, edges, tempEdge }) => {
+  console.log("nodes", nodes);
+  console.log("edges", edges);
+  console.log("tempEdge", tempEdge);
   const svgRef = useRef<SVGSVGElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -48,24 +51,14 @@ const Search: FC<GraphProps> = ({ nodes, edges, tempEdge }) => {
     const contentHeight = size.height - margin.top - margin.bottom;
     const radius = 20;
 
-    // 构建邻接表
-    const adjacency: Record<number, number[]> = {};
-    for (let i = 0; i < nodes.length; i++) {
-      adjacency[i] = [];
-      for (let j = 0; j < nodes.length; j++) {
-        if (edges[i][j]) {
-          adjacency[i].push(j);
-        }
-      }
-    }
-
+    // 直接使用 edges (邻接表)
     // DFS 构建树（从节点 0 开始）
     const visited = new Set<number>();
     const buildTree = (node: number): TreeNode => {
       visited.add(node);
       return {
         id: node,
-        children: adjacency[node]
+        children: (edges[node] || [])  // 注意这里用 edges 代替之前的 adjacency
           .filter((child) => !visited.has(child))
           .map((child) => buildTree(child)),
       };
@@ -73,14 +66,14 @@ const Search: FC<GraphProps> = ({ nodes, edges, tempEdge }) => {
 
     const treeData = buildTree(0);
 
-    // 使用 D3 的树布局
     const root = d3.hierarchy<TreeNode>(treeData, (d) => d.children);
     const treeLayout = d3.tree<TreeNode>().size([contentWidth, contentHeight]);
     const treeResult = treeLayout(root);
 
     // 定义箭头 marker
-    svg.append("defs")
-      .append("marker")
+    const defs = svg.append("defs");
+
+    defs.append("marker")
       .attr("id", "arrow")
       .attr("viewBox", "0 -5 10 10")
       .attr("refX", 10)
@@ -92,8 +85,7 @@ const Search: FC<GraphProps> = ({ nodes, edges, tempEdge }) => {
       .attr("d", "M0,-5L10,0L0,5")
       .attr("fill", "#78909c");
 
-    svg.append("defs")
-      .append("marker")
+    defs.append("marker")
       .attr("id", "arrow-active")
       .attr("viewBox", "0 -5 10 10")
       .attr("refX", 10)
@@ -123,6 +115,7 @@ const Search: FC<GraphProps> = ({ nodes, edges, tempEdge }) => {
 
       return `M${startX},${startY}L${endX},${endY}`;
     };
+
     // 绘制边
     g.selectAll("path.link")
       .data(treeResult.links())

@@ -3,15 +3,15 @@ import * as d3 from "d3";
 import styles from "./heap.module.scss";
 
 export interface HeapSortProps {
-    data: number[];
+    array: number[];
     comparingId?: number[];
     sortedIndex?: number;
 }
 
 const HeapSort: FC<HeapSortProps> = ({
-    data,
+    array,
     comparingId = [],
-    sortedIndex = data.length,
+    sortedIndex = array.length,
 }) => {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -36,6 +36,7 @@ const HeapSort: FC<HeapSortProps> = ({
     }, []);
 
     useEffect(() => {
+        console.log("Heap nodes:", array.map((value, i) => ({ id: i, value })));
         if (!svgRef.current || size.width === 0 || size.height === 0) return;
 
         const svg = d3.select(svgRef.current);
@@ -46,7 +47,7 @@ const HeapSort: FC<HeapSortProps> = ({
         const width = size.width - margin.left - margin.right;
         const height = size.height - margin.top - margin.bottom;
 
-        const nodes = data.map((value, i) => ({ id: i, value }));
+        const nodes = array.map((value, i) => ({ id: i, value }));
         const root = d3
             .stratify<{ id: number; value: number }>()
             .id(d => `${d.id}`)
@@ -86,7 +87,7 @@ const HeapSort: FC<HeapSortProps> = ({
             .append("circle")
             .attr("r", 20)
             .attr("fill", d => {
-                if (comparingId.includes(d.data.id)) return "#f57f17"; // 比较中
+                if (comparingId && comparingId.includes(d.data.id)) return "#f57f17"; // 比较中
                 if (d.data.id >= sortedIndex) return "#4caf50"; // 已排序
                 return "#b0bec5"; // 默认
             })
@@ -103,7 +104,7 @@ const HeapSort: FC<HeapSortProps> = ({
 
         // Draw data array at left-bottom corner
         const arrayWidth = Math.min(width * 0.5, 300);
-        const rectWidth = arrayWidth / data.length;
+        const rectWidth = arrayWidth / array.length;
         const rectHeight = 28;
         const arrayX = 0;
         const arrayY = height - rectHeight;
@@ -112,7 +113,7 @@ const HeapSort: FC<HeapSortProps> = ({
 
         arrayG
             .selectAll("rect")
-            .data(data)
+            .data(array)
             .enter()
             .append("rect")
             .attr("x", (_, i) => i * rectWidth)
@@ -124,7 +125,7 @@ const HeapSort: FC<HeapSortProps> = ({
 
         arrayG
             .selectAll("text")
-            .data(data)
+            .data(array)
             .enter()
             .append("text")
             .attr("x", (_, i) => i * rectWidth + rectWidth / 2)
@@ -134,7 +135,7 @@ const HeapSort: FC<HeapSortProps> = ({
             .attr("fill", "#fff")
             .style("font-size", "13px")
             .text(d => d);
-    }, [data, comparingId, sortedIndex, size]);
+    }, [array, comparingId, sortedIndex, size]);
 
     return (
         <div ref={containerRef} className={styles.heapChart}>

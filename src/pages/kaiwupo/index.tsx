@@ -14,7 +14,7 @@ import { sendAlgorithmData } from '../../api/algorithm/bubblesort';
 import { sendGraphAlgorithm } from '../../api/algorithm/search';
 import { sendDijkstra } from '../../api/algorithm/dijkstra';
 import { sendHeapSort } from '../../api/algorithm/heapsort';
-import { parseInputForSort } from '../../utils';
+import { parseInputForSearch, parseInputForShortestPath, parseInputForSort } from '../../utils';
 import styles from './kaiwupo.module.scss';
 
 const KaiwupoPage: FC = () => {
@@ -78,21 +78,36 @@ const KaiwupoPage: FC = () => {
           mergeRange: step.mergeRange,
         }));
       } else if (algorithm === 'dfs') {
-        const res = await sendGraphAlgorithm({ count: 1, edges: [[1]], type: 0 });
+        const input = parseInputForSearch(inputText);
+        if (!input) {
+          message.error('输入格式有误,请确保第一行为顶点数量n,第二行到n-1行为空格分隔的边');
+          return;
+        }
+        const res = await sendGraphAlgorithm({ num: input.num, edges: input.edges, type: 1 });
         result = res.map((step: any) => ({
-          nodes: step.nodes,
+          visited: step.visited,
           edges: step.edges,
           tempEdge: step.tempEdge,
         }));
       } else if (algorithm === 'bfs') {
-        const res = await sendGraphAlgorithm({ count: 1, edges: [[1]], type: 1 });
+        const input = parseInputForSearch(inputText);
+        if (!input) {
+          message.error('输入格式有误,请确保第一行为顶点数量n,第二行到n-1行为空格分隔的边');
+          return;
+        }
+        const res = await sendGraphAlgorithm({ num: input.num, edges: input.edges, type: 2 });
         result = res.map((step: any) => ({
-          nodes: step.nodes,
+          visited: step.visited,
           edges: step.edges,
           tempEdge: step.tempEdge,
         }));
       } else if (algorithm === 'dij') {
-        const res = await sendDijkstra({ count: 1, edges: [[1]], start: 0 });
+        const input = parseInputForShortestPath(inputText);
+        if (!input) {
+          message.error('输入格式有误,请确保第一行为顶点数量n、边数量m、起点st,第二行到m行为空格分隔的边');
+          return;
+        }
+        const res = await sendDijkstra({ num: input.num, edges: input.edges, start: input.start });
         result = res.map((step: any) => ({
           edges: step.edges,
           dis: step.dis,
@@ -101,9 +116,14 @@ const KaiwupoPage: FC = () => {
 
         }));
       } else if (algorithm == 'heap') {
-        const res = await sendHeapSort({ data: [1] });
+        const input = parseInputForSort(inputText);
+        if (!input) {
+          message.error('输入格式有误，请确保第一行为数字数量，第二行为空格分隔的数字');
+          return;
+        }
+        const res = await sendHeapSort({ num: input.num, array: input.array });
         result = res.map((step: any) => ({
-          data: step.data,
+          array: step.array,
           comparingId: step.comparingId,
           sortedIndex: step.sortedIndex
         }))
@@ -199,7 +219,7 @@ const KaiwupoPage: FC = () => {
       case 'heap':
         return (
           <HeapSort
-            data={step.data}
+            array={step.array}
             comparingId={step.comparingId}
             sortedIndex={step.sortedIndex}
           />
@@ -207,7 +227,7 @@ const KaiwupoPage: FC = () => {
       case 'dfs':
         return (
           <Search
-            nodes={step.nodes}
+            nodes={step.visited}
             edges={step.edges}
             tempEdge={step.tempEdge}
           />
@@ -215,7 +235,7 @@ const KaiwupoPage: FC = () => {
       case 'bfs':
         return (
           <Search
-            nodes={step.nodes}
+            nodes={step.visited}
             edges={step.edges}
             tempEdge={step.tempEdge}
           />
