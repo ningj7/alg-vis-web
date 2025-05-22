@@ -1,6 +1,9 @@
 $img_url: "/img/kaiwupo.jpg";
 
 .kaiwupo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: fixed;
   inset: 0;
   height: 100%;
@@ -110,5 +113,30 @@ $img_url: "/img/kaiwupo.jpg";
     overflow: hidden;
     display: flex;
     flex-direction: column;
+  }
+}
+
+.algorithmIntro {
+  padding: 24px;
+  margin: 20px auto; // ⬅️ 让它水平居中
+  width: 90%;
+  max-width: 900px; // ⬅️ 限制最大宽度，防止过宽难以阅读
+  font-family: 'KaiTi', 'STKaiti', 'Songti SC', serif;
+  color: #3b2e1a;
+  text-align: left;
+  white-space: pre-wrap;
+  line-height: 1.6;
+
+  .title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    letter-spacing: 2px;
+  }
+
+  .paragraph {
+    margin-bottom: 14px;
+    text-indent: 2em;
   }
 }

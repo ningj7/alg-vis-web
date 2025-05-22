@@ -12,7 +12,7 @@ export interface StepResult {
   sortedTailIndex: number;
 }
 
-export const sendAlgorithmData = async (params: Params): Promise<StepResult[]> => {
+export const sendBubbleSortData = async (params: Params): Promise<StepResult[]> => {
   const response = await Request.post('/algorithms/bubbleSort', params);
   return response.data;
 };

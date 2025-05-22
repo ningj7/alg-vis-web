@@ -13,7 +13,7 @@ export interface  StepResult{
 
 }
 
-export const sendGraphAlgorithm = async (params: Params): Promise<StepResult[]> => {
+export const sendSearchData = async (params: Params): Promise<StepResult[]> => {
     const response = await Request.post('/algorithms/search', params);
     return response.data;
 };

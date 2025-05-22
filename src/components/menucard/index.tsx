@@ -34,7 +34,7 @@ const items: MenuProps['items'] = [
     key: 'minimum spanning tree',
     children: [
       { label: 'Prim', key: 'prim' },
-      { label: 'Kruskal', key: 'Kruskal' },
+      { label: 'Kruskal', key: 'kruskal' },
     ],
   }
 ];

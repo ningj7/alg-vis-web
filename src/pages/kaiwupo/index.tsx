@@ -7,16 +7,19 @@ import ConsoleCard from '../../components/consolecard';
 import BubbleSort from '../../components/visualizationcard/bubblesort';
 import MergeSort from "../../components/visualizationcard/mergesort"
 import HeapSort from "../../components/visualizationcard/heapsort"
+import QuickSort from '../../components/visualizationcard/quicksort';
 import Search from "../../components/visualizationcard/search"
 import Dijkstra from '../../components/visualizationcard/dijkstra';
 import SpanningTree from '../../components/visualizationcard/spanningtree';
 import { sendMergeSortData } from '../../api/algorithm/mergesort'
-import { sendAlgorithmData } from '../../api/algorithm/bubblesort';
-import { sendGraphAlgorithm } from '../../api/algorithm/search';
-import { sendDijkstra } from '../../api/algorithm/dijkstra';
-import { sendHeapSort } from '../../api/algorithm/heapsort';
-import { sendSpanningTree } from '../../api/algorithm/spanningTree';
-import { parseInputForSearch, parseInputForShortestPath, parseInputForSort, parseInputForSpanningTree } from '../../utils';
+import { sendBubbleSortData } from '../../api/algorithm/bubblesort';
+import { sendSearchData } from '../../api/algorithm/search';
+import { sendDijkstraData } from '../../api/algorithm/dijkstra';
+import { sendHeapSortData } from '../../api/algorithm/heapsort';
+import { sendSpanningTreeData } from '../../api/algorithm/spanningtree';
+import { sendQuickSortData } from '../../api/algorithm/quicksort';
+import { algorithmDescriptions } from '../../utils/description';
+import { parseInputForSearch, parseInputForShortestPath, parseInputForSort, parseInputForSpanningTree } from '../../utils/index';
 import styles from './kaiwupo.module.scss';
 
 const KaiwupoPage: FC = () => {
@@ -60,7 +63,7 @@ const KaiwupoPage: FC = () => {
           message.error('输入格式有误，请确保第一行为数字数量，第二行为空格分隔的数字');
           return;
         }
-        const res = await sendAlgorithmData({ num: input.num, array: input.array });
+        const res = await sendBubbleSortData({ num: input.num, array: input.array });
         result = res.map((step: any) => ({
           array: step.array,
           curIndex: step.curIndex,
@@ -85,7 +88,7 @@ const KaiwupoPage: FC = () => {
           message.error('输入格式有误,请确保第一行为顶点数量n,第二行到n-1行为空格分隔的边');
           return;
         }
-        const res = await sendGraphAlgorithm({ num: input.num, edges: input.edges, type: 1 });
+        const res = await sendSearchData({ num: input.num, edges: input.edges, type: 1 });
         result = res.map((step: any) => ({
           visited: step.visited,
           edges: step.edges,
@@ -97,7 +100,7 @@ const KaiwupoPage: FC = () => {
           message.error('输入格式有误,请确保第一行为顶点数量n,第二行到n-1行为空格分隔的边');
           return;
         }
-        const res = await sendGraphAlgorithm({ num: input.num, edges: input.edges, type: 2 });
+        const res = await sendSearchData({ num: input.num, edges: input.edges, type: 2 });
         result = res.map((step: any) => ({
           visited: step.visited,
           edges: step.edges,
@@ -109,7 +112,7 @@ const KaiwupoPage: FC = () => {
           message.error('输入格式有误,请确保第一行为顶点数量n、边数量m、起点st,第二行到m行为空格分隔的边');
           return;
         }
-        const res = await sendDijkstra({ num: input.num, edges: input.edges, start: input.start });
+        const res = await sendDijkstraData({ num: input.num, edges: input.edges, start: input.start });
         result = res.map((step: any) => ({
           edges: step.edges,
           dis: step.dis,
@@ -123,7 +126,7 @@ const KaiwupoPage: FC = () => {
           message.error('输入格式有误，请确保第一行为数字数量，第二行为空格分隔的数字');
           return;
         }
-        const res = await sendHeapSort({ num: input.num, array: input.array });
+        const res = await sendHeapSortData({ num: input.num, array: input.array });
         result = res.map((step: any) => ({
           array: step.array,
           comparingId: step.comparingId,
@@ -135,7 +138,7 @@ const KaiwupoPage: FC = () => {
           message.error('输入格式有误，请确保第一行为点数量、边数量，第二行为空格分隔的数字');
           return;
         }
-        const res = await sendSpanningTree({ num: input.num, edges: input.edges, type: 1 });
+        const res = await sendSpanningTreeData({ num: input.num, edges: input.edges, type: 1 });
         result = res.map((step: any) => ({
           edges: step.edges,
           visited: step.visited,
@@ -148,15 +151,26 @@ const KaiwupoPage: FC = () => {
           message.error('输入格式有误，请确保第一行为点数量、边数量，第二行为空格分隔的数字');
           return;
         }
-        const res = await sendSpanningTree({ num: input.num, edges: input.edges, type: 2 });
+        const res = await sendSpanningTreeData({ num: input.num, edges: input.edges, type: 2 });
         result = res.map((step: any) => ({
           edges: step.edges,
           visited: step.visited,
           edgeStatus: step.edgeStatus,
           totalWeight: step.totalWeight
         }));
-      }
-      else {
+      } else if (algorithm == 'quick') {
+        const input = parseInputForSort(inputText);
+        if (!input) {
+          message.error('输入格式有误，请确保第一行为数字数量，第二行为空格分隔的数字');
+          return;
+        }
+        const res = await sendQuickSortData({ num: input.num, array: input.array });
+        result = res.map((step: any) => ({
+          array: step.array,
+          status: step.status,
+          index: step.index
+        }));
+      } else {
         message.warning('该算法暂不支持演示');
         return;
       }
@@ -222,6 +236,21 @@ const KaiwupoPage: FC = () => {
 
 
   const renderVisualizer = () => {
+    if (steps.length === 0) {
+      const intro = algorithmDescriptions[algorithm];
+      if (!intro) return <div className={styles.algorithmIntro}>请选择一种算法查看介绍</div>;
+
+      return (
+        <div className={styles.algorithmIntro}>
+          <div className={styles.title}>{intro.title}</div>
+          {intro.paragraphs.map((p, i) => (
+            <div className={styles.paragraph} key={i}>
+              {p}
+            </div>
+          ))}
+        </div>
+      );
+    }
     const step = steps[currentStep];
     if (!step) return null;
 
@@ -286,15 +315,23 @@ const KaiwupoPage: FC = () => {
             totalWeight={step.totalWeight}
           />
         );
-        case 'kruskal':
-          return (
-            <SpanningTree
-              edges={step.edges}
-              visited={step.visited}
-              edgeStatus={step.edgeStatus}
-              totalWeight={step.totalWeight}
-            />
-          );
+      case 'kruskal':
+        return (
+          <SpanningTree
+            edges={step.edges}
+            visited={step.visited}
+            edgeStatus={step.edgeStatus}
+            totalWeight={step.totalWeight}
+          />
+        );
+      case 'quick':
+        return (
+          <QuickSort
+            array={step.array}
+            status={step.status}
+            index={step.index}
+          />
+        );
       default:
         return <div style={{ color: '#fff', padding: 20 }}>该算法暂无可视化组件</div>;
     }

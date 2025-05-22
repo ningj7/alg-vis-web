@@ -11,7 +11,7 @@ export interface StepResult {
     sortedIndex?: number;    // 表示从该下标开始（含）为已排好序部分
 }
 
-export const sendHeapSort = async (params: Params): Promise<StepResult[]> => {
+export const sendHeapSortData = async (params: Params): Promise<StepResult[]> => {
     const response = await Request.post('/algorithms/heapSort', params);
     return response.data;
 };

@@ -16,6 +16,7 @@ const SpanningTree: FC<SpanningTreeProps> = ({
     totalWeight,
 }) => {
     console.log("edges?", edgeStatus);
+    console.log("visited?", visited);
     const svgRef = useRef<SVGSVGElement | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [size, setSize] = useState({ width: 0, height: 0 });
@@ -72,10 +73,17 @@ const SpanningTree: FC<SpanningTreeProps> = ({
             }
         });
 
-        edgeStatus?.forEach(([u, v, status]) => {
-            const key = u < v ? `${u}-${v}` : `${v}-${u}`;
-            statusMap.set(key, status);
-        });
+        if (edgeStatus) {
+            for (let u = 0; u < edgeStatus.length; u++) {
+                for (let v = 0; v < edgeStatus[u].length; v++) {
+                    const status = edgeStatus[u][v];
+                    if (status > 0) {
+                        const key = u < v ? `${u}-${v}` : `${v}-${u}`;
+                        statusMap.set(key, status);
+                    }
+                }
+            }
+        }
 
         const links = Array.from(edgeMap.entries()).map(([key, weight]) => {
             const [u, v] = key.split("-").map(Number);

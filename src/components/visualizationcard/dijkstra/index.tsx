@@ -15,12 +15,13 @@ const Dijkstra: FC<DijkstraProps> = ({
     visited = [],
     visitedEdges = [],
 }) => {
+    console.log("Dijkstra edges", visitedEdges);
     const svgRef = useRef<SVGSVGElement | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [size, setSize] = useState({ width: 0, height: 0 });
 
     const visitedEdge =
-        visitedEdges.length === 2
+        visitedEdges?.length === 2
             ? { from: visitedEdges[0], to: visitedEdges[1] }
             : null;
 

@@ -13,7 +13,7 @@ export interface  StepResult{
     totalWeight: number; // 当前总权重
 }
 
-export const sendSpanningTree = async (params: Params): Promise<StepResult[]> => {
+export const sendSpanningTreeData = async (params: Params): Promise<StepResult[]> => {
     const response = await Request.post('/algorithms/spanningTree', params);
     return response.data;
 };
