@@ -1,0 +1,153 @@
+.boardWrapper {
+  padding: 24px;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: 32px;
+  font-family: 'STKaiti', 'KaiTi', cursive;
+  color: #2c1b18;
+  position: relative;
+
+  &::after {
+    content: '印';
+    position: absolute;
+    top: -12px;
+    right: -32px;
+    font-size: 20px;
+    color: #b92d2d;
+    transform: rotate(-20deg);
+    font-weight: bold;
+  }
+}
+
+.addBtn {
+  background-color: #8c4a2f;
+  color: #fff;
+  border: none;
+
+  &:hover {
+    background-color: #a25a3d;
+    color: #fff;
+  }
+}
+
+.card {
+  margin-bottom: 16px;
+  background: #fdf8f2;
+  border: 1px solid #e2d2b0;
+  border-radius: 12px;
+  box-shadow: 2px 2px 6px rgba(100, 60, 40, 0.2);
+}
+
+.cardTitle {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 4px;
+  color: #4a2a1f;
+}
+
+.cardMeta {
+  font-size: 13px;
+  color: #766050;
+  margin-bottom: 8px;
+}
+
+.viewBtn {
+  background-color: #aaa;
+  color: white;
+  font-size: 12px;
+  border: none;
+
+  &:hover {
+    background-color: #555;
+  }
+}
+
+.modal {
+  :global(.ant-modal-content) {
+    background: #fdf8f2 !important;
+    border: 1px solid #d6c3a4;
+    border-radius: 12px;
+    font-family: 'KaiTi', cursive;
+    box-shadow: 0 0 16px rgba(100, 60, 40, 0.25);
+  }
+
+  :global(.ant-modal-header) {
+    background: #fdf8f2 !important;
+    border-bottom: 1px solid #e2d2b0;
+    font-family: 'KaiTi', cursive;
+    color: #3a2216;
+  }
+
+  :global(.ant-modal-title) {
+    font-size: 20px;
+    color: #3a2216;
+  }
+
+  :global(.ant-modal-body) {
+    background: #fdf8f2 !important;
+    color: #3a2216;
+    font-family: 'KaiTi', cursive;
+  }
+
+  :global(.ant-modal-footer) {
+    background: #fdf8f2;
+    border-top: none;
+  }
+
+  :global(.ant-modal .ant-btn-primary) {
+  background-color: #8c4a2f !important;
+  border-color: #8c4a2f !important;
+
+  &:hover {
+    background-color: #a25a3d !important;
+    border-color: #a25a3d !important;
+  }
+}
+
+  :global(.ant-input),
+  :global(.ant-input-textarea) {
+    font-family: 'KaiTi', cursive;
+    background: #fffaf3;
+    border: 1px solid #cdb79e;
+    border-radius: 8px;
+    color: #3a2216;
+
+    &:focus {
+      border-color: #8c4a2f;
+      box-shadow: 0 0 0 2px rgba(140, 74, 47, 0.2);
+    }
+  }
+}
+
+.input {
+  margin-bottom: 12px;
+}
+
+.textarea {
+  resize: none;
+}
+
+.listContainer {
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 8px;
+
+  // 隐藏滚动条（兼容主流浏览器）
+  scrollbar-width: none; // Firefox
+  -ms-overflow-style: none; // IE 10+
+
+  &::-webkit-scrollbar {
+    display: none; // Chrome, Safari
+  }
+
+  scroll-behavior: smooth;
+}

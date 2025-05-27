@@ -1,7 +1,6 @@
 import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, Select, Radio, message } from "antd";
-import { Info, Action } from "../../api/msg";
 import { Login, Register } from "../../api/login";
 import styles from "./logincard.module.scss";
 import { ScrollText } from "lucide-react";
@@ -33,11 +32,12 @@ const LoginCard: FC = () => {
     const toLogin = async () => {
         const { code, message: msg, data } = await Login(account, password);
         if (code !== 200) {
-            Info(Action.error, msg);
+            message.error(msg);
             return;
         }
-        sessionStorage.setItem("jwt", data.jwt);
-        Info(Action.navigate, "启程成功～");
+        sessionStorage.setItem("token", data.token);
+        sessionStorage.setItem("account", account);
+        message.success("登录成功！");
         navigateTo("/siguoya");
     };
 
@@ -74,11 +74,11 @@ const LoginCard: FC = () => {
         };
         const { code, message: msg } = await Register(registerData);
         if (code !== 200) {
-            Info(Action.error, msg);
+            message.error(msg);
             return;
         }
 
-        Info(Action.success, `少侠「${nickname}」拜师成功！`);
+        message.success("拜师成功！快去登录吧~");
         setShowRegister(false);
         setUser(newUser);      // 自动填充
         setPasswd(newPasswd);

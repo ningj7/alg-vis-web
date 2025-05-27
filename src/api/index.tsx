@@ -26,7 +26,7 @@ Request.interceptors.request.use(
     // 可选：添加 token
     const token = sessionStorage.getItem("token");
     if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+      config.headers["Authorization"] = `${token}`;
     }
 
     return config;
@@ -37,7 +37,17 @@ Request.interceptors.request.use(
 Request.interceptors.response.use(
   res => res.data,
   error => {
-    message.error("网络异常，请稍后再试！");
+    if (error.response && error.response.status === 401) {
+      // 清除 token
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("account");
+
+      message.error("登录已过期，请重新登录！");
+      window.location.href = "/yingxiongtie";
+    } else {
+      message.error("网络异常，请稍后再试！");
+    }
+
     return Promise.reject(error);
   }
 );

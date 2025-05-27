@@ -22,3 +22,45 @@ $img_url: "/img/siguoya.jpeg";
         }
     }
 }
+
+.centerWrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    width: 100%;
+    max-width: 800px;
+    padding: 0 20px;
+    pointer-events: none; // 可选：避免挡住背后组件
+}
+
+.centerWrapper :global(*) {
+    pointer-events: auto; // 让 CenterPanel 内部仍能交互
+}
+
+.title {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 48px;
+    font-weight: bold;
+    color: #f5deb3; // 金色调
+    font-family: "STKaiti", "KaiTi", cursive;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+    z-index: 10;
+    pointer-events: none;
+  }
+  
+  .footer {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #eeeeee;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    pointer-events: none;
+  }

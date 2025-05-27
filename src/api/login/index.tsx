@@ -8,7 +8,7 @@ export interface LoginResp {
     message: string
     //用户主键ID
     data: {
-        jwt: string;
+        token: string;
     };
 };
 

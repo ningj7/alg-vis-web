@@ -1,0 +1,213 @@
+.centerPanel {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    color: #3c332a;
+    font-family: "KaiTi", "STKaiti", serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .noticeBoard {
+    border: 1px solid rgba(120, 90, 40, 0.3);
+    border-radius: 12px;
+    width: 600px;
+    max-width: 100%;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 24px;
+    background: rgba(255, 250, 235, 0.3); // 宣纸浅黄底
+    box-shadow: 0 4px 8px rgba(100, 80, 50, 0.1);
+    position: relative;
+  }
+  
+  .noticeHeader {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #5b4724;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .publishButton {
+    background-color: rgba(160, 120, 60, 0.6);
+    color: #fff8e1;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  .publishButton:hover:not(:disabled) {
+    background-color: rgba(180, 140, 70, 0.75);
+    box-shadow: 0 0 6px rgba(180, 140, 70, 0.3);
+  }
+  .disabled {
+    cursor: not-allowed !important;
+    opacity: 0.5;
+  }
+  
+  .editor {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  
+    input,
+    textarea {
+      font-family: "KaiTi", "STKaiti", serif;
+      border: 1px solid rgba(140, 110, 60, 0.3);
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 1rem;
+      resize: none;
+      color: #3c332a;
+      background: rgba(255, 248, 225, 0.35); // 宣纸感
+    }
+    input::placeholder,
+    textarea::placeholder {
+      color: #9c8b60;
+    }
+  }
+  
+  .submitButton {
+    align-self: flex-end;
+    background-color: rgba(160, 120, 60, 0.6);
+    color: #fff8e1;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  .submitButton:hover {
+    background-color: rgba(180, 140, 70, 0.75);
+  }
+  
+  .noticeContentArea {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 160px;
+    user-select: none;
+  }
+  
+  .navButton {
+    background: rgba(160, 120, 60, 0.6);
+    border: none;
+    border-radius: 50%;
+    color: #fff8e1;
+    font-weight: 900;
+    font-size: 1.5rem;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .navButton:hover {
+    background-color: rgba(180, 140, 70, 0.75);
+  }
+  
+  .noticeContentBox {
+    flex: 1;
+    background: rgba(255, 250, 230, 0.35);
+    border-radius: 12px;
+    padding: 16px 24px;
+    box-shadow: inset 0 0 6px rgba(140, 110, 60, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #3c332a;
+  }
+  
+  .noticeTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #4f3c22;
+  }
+  
+  .noticeContent {
+    flex-grow: 1;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    margin-bottom: 8px;
+    color: #443928;
+  }
+  
+  .noticeTime {
+    font-size: 0.85rem;
+    color: #8a7550;
+    margin-bottom: 12px;
+    font-style: italic;
+  }
+  
+  .noticeActions {
+    display: flex;
+    gap: 12px;
+    button {
+      background-color: rgba(160, 120, 60, 0.2);
+      border: none;
+      border-radius: 6px;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #3c332a;
+      transition: background-color 0.3s ease;
+    }
+    button:hover:not(:disabled) {
+      background-color: rgba(180, 140, 70, 0.75);
+      color: #fff8e1;
+    }
+    .disabled {
+      cursor: not-allowed !important;
+      opacity: 0.5;
+      position: relative;
+    }
+    .disabled:hover::after {
+      content: "🔒";
+      position: absolute;
+      top: -20px;
+      right: 0;
+      font-size: 14px;
+      color: #a57c3c;
+    }
+  }
+  
+  .emptyNotice {
+    text-align: center;
+    color: #8a7550;
+    font-style: italic;
+    font-size: 1.2rem;
+    padding: 40px 0;
+  }
+  .dotIndicator {
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
+    gap: 8px;
+  }
+  
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(165, 124, 60, 0.4);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .dot:hover {
+    background-color: rgba(165, 124, 60, 0.8);
+  }
+  
+  .active {
+    background-color: rgba(165, 124, 60, 1);
+  }

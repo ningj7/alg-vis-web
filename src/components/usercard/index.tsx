@@ -1,8 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Popconfirm } from "antd";
-
-import { Info, Action } from "../../api/msg";
+import { Card, Popconfirm,message } from "antd";
 import { GetUser, User } from "../../api/user";
 
 import styles from "./usercard.module.scss";
@@ -18,20 +16,21 @@ const Comp: FC = () => {
     // 生命周期钩子函数
     useEffect(() => {
         const getAndSetUser = async () => {
-            const { code, message, data } = await GetUser(sessionStorage.getItem("jwt") as string);
-            if (code != 200) {
-                Info(Action.error, message);
+            const res= await GetUser();
+            if (res.code != 200) {
+                message.error(res.message);
                 return;
             }
-            setUser(data);
+            setUser(res.data);
         };
         getAndSetUser();
     }, []);
 
     // 注销
     const logout = () => {
-        Info(Action.guiyin, "归隐成功~");
-        sessionStorage.removeItem("jwt");
+        message.success("归隐成功~");
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("account");
         setUser(null);
         navigateTo('/yingxiongtie');
     };

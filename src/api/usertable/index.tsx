@@ -9,7 +9,6 @@ export interface User {
   account: string;
   role: number;
   status: number;
-  createTime: string;
 }
 
 export interface UserListResponse {
@@ -36,3 +35,16 @@ export const GetUsers = async (
 ): Promise<UserListResponse> => {
   return Request.get("/user/queryList", { params });
 };
+
+export interface UpdateRequest {
+  id: number;
+  nickName: string;
+  gender:number;
+  role: number;
+  status: number;
+  resetPassword: boolean; 
+}
+
+export const UpdateUser = async (data: UpdateRequest): Promise<number> => {
+  return Request.post("/user/update", data);
+}

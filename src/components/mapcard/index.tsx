@@ -1,30 +1,30 @@
 import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Card, Drawer } from "antd";
+import { Card, Drawer, message } from "antd";
 
 import styles from "./mapcard.module.scss";
 
 /**
  * 地图组件
  */
-const Comp: FC = ()=>{
+const Comp: FC = () => {
     const navigateTo = useNavigate();
 
     const [showDoor, setShowDoor] = useState<boolean>(true);
     const [showMap, setShowMap] = useState<boolean>(false);
 
-    const open = ()=>{
+    const open = () => {
         setShowDoor(false);
         setShowMap(true);
     };
 
-    const close = ()=>{
+    const close = () => {
         setShowMap(false);
         setShowDoor(true);
     }
 
-    const move = (key: string)=>{
+    const move = (key: string) => {
         close();
         navigateTo(key);
     }
@@ -32,7 +32,7 @@ const Comp: FC = ()=>{
     return (
         <div>
             {
-                showDoor && 
+                showDoor &&
                 <Card
                     hoverable
                     className={styles.openmap}
@@ -53,19 +53,33 @@ const Comp: FC = ()=>{
                     <div
                         className={styles.itemlist}
                     >
-                      <Card
+                        <Card
                             hoverable
                             className={styles.item}
-                            onClick={()=>{move("/kaiwupo")}}
-                            cover={<img src="/img/kaiwupo.jpg"/>}
+                            onClick={() => { move("/kaiwupo") }}
+                            cover={<img src="/img/kaiwupo.jpg" />}
                         >
                             <h3>前往开悟坡</h3>
                         </Card>
                         <Card
                             hoverable
                             className={styles.item}
-                            onClick={()=>{move("/tianjige")}}
-                            cover={<img src="/img/tianjige.jpeg"/>}
+                            onClick={() => { move("/jianyantang") }}
+                            cover={<img src="/img/jianyantang.jpg" />}
+                        >
+                            <h3>前往谏言堂</h3>
+                        </Card>
+                        <Card
+                            hoverable
+                            className={styles.item}
+                            onClick={() => {
+                                if (sessionStorage.getItem("account") !== "admin") {
+                                    message.warning("非管理员不可前往天机阁！");
+                                    return;
+                                }
+                                move("/tianjige")
+                            }}
+                            cover={<img src="/img/tianjige.jpeg" />}
                         >
                             <h3>前往天机阁</h3>
                         </Card>

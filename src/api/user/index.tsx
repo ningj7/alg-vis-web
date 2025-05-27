@@ -31,6 +31,6 @@ export interface User {
  * @param user ——账号
  * @returns UserResp
  */
-export const GetUser = async (userId: string): Promise<UserResp> => {
-    return Request.get("/user/query", { method: "get", params: { "userId": userId } });
+export const GetUser = async (): Promise<UserResp> => {
+    return Request.get("/user/query", { method: "get" });
 };

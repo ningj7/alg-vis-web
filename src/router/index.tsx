@@ -4,8 +4,8 @@ import YingXiongTie from "../pages/yingxiongtie"
 import SiGuoYa from "../pages/siguoya"
 import KaiWuPo from "../pages/kaiwupo";
 import TianJiGe from "../pages/tianjige"
-
-import { Info, Action } from "../api/msg";
+import JianYanTang from "../pages/jianyantang"
+import { message } from "antd";
 
 /**
  * 路由器声明
@@ -33,6 +33,10 @@ const routes: RouteObject[] = [
     {
         path: "/tianjige",
         element: <TianJiGe />
+    },
+    {
+        path: "/jianyantang",
+        element: <JianYanTang />
     }
 ];
 
@@ -46,8 +50,9 @@ const Router: FC = () => {
     const location = useLocation();
 
     // 获取登录用户信息
-    const user = sessionStorage.getItem("jwt");
+    const user = sessionStorage.getItem("token");
     if (!user && location.pathname != "/yingxiongtie") {
+        message.warning("请先登录！");
         return <Navigate to="/yingxiongtie" />;
     }
 

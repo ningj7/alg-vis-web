@@ -160,16 +160,22 @@ $parchment: #f5f1e5;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+// UserTable.module.scss
 .actionBtn {
-  background: none;
-  border: 1px solid rgba($bamboo-green, 0.4);
-  color: rgba($bamboo-green, 0.8);
-  padding: 4px 12px;
-  border-radius: 16px;
+  color: #fff; // 文字白色更清晰
+  background-color: #b8860b; // 深金色背景
+  border: none;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-family: "STKaiti", KaiTi, serif;
+  font-weight: bold;
   cursor: pointer;
   transition: all 0.3s;
-  font-family: 'Kaiti';
 
+  &:hover {
+    background-color: #daa520; // hover 更亮
+    color: #fff;
+  }
 }
 
 .previewMask {
@@ -192,4 +198,11 @@ $parchment: #f5f1e5;
     background: rgba($bamboo-green, 0.15) !important;
     border: 1px solid rgba($bamboo-green, 0.3) !important;
   }
+}
+
+.modal :global(.ant-modal-content) {
+  background-color: #f9feff;
+  border: 2px solid #5c8882;
+  border-radius: 12px;
+  font-family: "KaiTi", serif;
 }

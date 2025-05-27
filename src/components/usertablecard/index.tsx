@@ -1,8 +1,7 @@
 import { FC, useState, useEffect } from 'react';
-import { Table, Tag, Image, Popconfirm, Input, Select, Button } from 'antd';
+import { Table, Tag, Image, Popconfirm, Input, Select, Button, Modal, Form, Checkbox, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { Info, Action } from '../../api/msg';
-import { GetUsers, User } from '../../api/usertable';
+import { GetUsers, User, UpdateUser, UpdateRequest } from '../../api/usertable';
 import styles from './UserTable.module.scss';
 
 const { Option } = Select;
@@ -14,6 +13,8 @@ interface TableParams {
         total?: number;
     };
 }
+
+
 
 const UserTable: FC = () => {
     const [data, setData] = useState<User[]>([]);
@@ -30,6 +31,29 @@ const UserTable: FC = () => {
             total: 0
         },
     });
+    const handleUpdate = async () => {
+        try {
+            const values = await form.validateFields();
+            if (editingUser) {
+                const updateData: UpdateRequest = {
+                    ...editingUser,
+                    ...values,
+                    resetPassword: false, // 默认不重置密码
+                };
+                await UpdateUser(updateData);
+                message.success('易容成功');
+                setIsModalVisible(false);
+                setEditingUser(null);
+                fetchData(); // 刷新表格
+            }
+        } catch (err) {
+            message.error('易容失败，请检查输入');
+        }
+    };
+
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [editingUser, setEditingUser] = useState<User | null>(null);
+    const [form] = Form.useForm();
 
     const fetchData = async () => {
         setLoading(true);
@@ -48,7 +72,7 @@ const UserTable: FC = () => {
                 },
             }));
         } catch (err) {
-            Info(Action.error, '获取用户列表失败');
+            message.error('获取用户列表失败');
         } finally {
             setLoading(false);
         }
@@ -133,7 +157,14 @@ const UserTable: FC = () => {
             render: (_, record) => (
                 <Popconfirm
                     title={`确定要对${record.nickName}施展易容术？`}
-                    onConfirm={() => Info(Action.success, `开始修改 ${record.nickName}`)}
+                    onConfirm={() => {
+                        setEditingUser(record);
+                        setIsModalVisible(true);
+                        form.setFieldsValue({
+                            ...record,
+                            resetPassword: false, // 默认不重置密码
+                        });
+                    }}
                     okText="确认"
                     cancelText="取消"
                     overlayClassName={styles.popconfirmOverlay}
@@ -201,6 +232,46 @@ const UserTable: FC = () => {
                 className={styles.wuxiaTable}
                 bordered
             />
+
+            <Modal
+                title="施展易容术"
+                open={isModalVisible}
+                onCancel={() => {
+                    setIsModalVisible(false);
+                    setEditingUser(null);
+                }}
+                onOk={handleUpdate}
+                okText="确认"
+                cancelText="取消"
+                className={styles.modal}
+            >
+                <Form form={form} layout="vertical">
+                    <Form.Item label="武林称号" name="nickName" rules={[{ required: true, message: '请输入称号' }]}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item label="性别" name="gender" rules={[{ required: true }]}>
+                        <Select>
+                            <Option value={0}>男</Option>
+                            <Option value={1}>女</Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item label="角色" name="role" rules={[{ required: true }]}>
+                        <Select>
+                            <Option value={0}>宗主</Option>
+                            <Option value={1}>弟子</Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item label="状态" name="status" rules={[{ required: true }]}>
+                        <Select>
+                            <Option value={0}>正常</Option>
+                            <Option value={1}>异常</Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item name="resetPassword" valuePropName="checked" style={{ marginTop: 12 }}>
+                        <Checkbox>重置密码为默认</Checkbox>
+                    </Form.Item>
+                </Form>
+            </Modal>
         </div>
     );
 };
