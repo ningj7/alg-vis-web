@@ -92,8 +92,11 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ data, loading = false, 
         title="新增留言"
         onCancel={() => setNewVisible(false)}
         onOk={handleAdd}
-        okText="OK"
+        okText="添加"
+        cancelText="作罢"
         className={styles.modal}
+        okButtonProps={{ className: styles.okButton }}
+        cancelButtonProps={{ className: styles.cancelButton }}
       >
         <Input
           placeholder="请输入留言主题"

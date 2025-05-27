@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { Navigate, RouteObject, useRoutes, useLocation, useNavigate } from "react-router-dom";
 import YingXiongTie from "../pages/yingxiongtie"
 import SiGuoYa from "../pages/siguoya"
