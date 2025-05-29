@@ -136,7 +136,7 @@ const UserTable: FC = () => {
             width: 100,
             render: (_, record) => (
                 <Tag color={getRoleColor(record.role)} className={styles.statusTag}>
-                    {record.role === 0 ? '宗主' : '弟子'}
+                    {record.role === 0 ? '长老' : '弟子'}
                 </Tag>
             ),
         },
@@ -257,7 +257,7 @@ const UserTable: FC = () => {
                     </Form.Item>
                     <Form.Item label="角色" name="role" rules={[{ required: true }]}>
                         <Select>
-                            <Option value={0}>宗主</Option>
+                            <Option value={0}>长老</Option>
                             <Option value={1}>弟子</Option>
                         </Select>
                     </Form.Item>

@@ -60,8 +60,8 @@ const LoginCard: FC = () => {
             message.warning("账号至少 4 个字符");
             return;
         }
-        if (!newPasswd.trim() || newPasswd.length < 6) {
-            message.warning("密码至少 6 个字符");
+        if (!newPasswd.trim() || newPasswd.length < 6 || !/[a-zA-Z]/.test(newPasswd)) {
+            message.warning("密码至少 6 个字符，且包含字母");
             return;
         }
 

@@ -52,3 +52,103 @@
     font-size: 14px;
     width: 200px;
 }
+.avatarWrapper {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+
+  .avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .centerEditBtn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.3);
+    border: 2px solid white;
+    border-radius: 50%;
+    padding: 10px;
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+  }
+
+  &:hover .centerEditBtn {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+.customModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 10, 10, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+
+  .modalContent {
+    background: #fdfcf9;
+    border: 2px solid #aaa;
+    border-radius: 12px;
+    padding: 24px;
+    width: 360px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+    font-family: '宋体', serif;
+
+    h2 {
+      margin-bottom: 16px;
+      text-align: center;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      margin-bottom: 4px;
+      color: #444;
+    }
+
+    .avatarPreview {
+      text-align: center;
+      margin-bottom: 10px;
+
+      img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+    }
+
+    .modalButtons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+
+      button {
+        padding: 6px 16px;
+        background-color: #222;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #444;
+        }
+      }
+    }
+  }
+}

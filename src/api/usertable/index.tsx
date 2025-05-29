@@ -5,7 +5,7 @@ export interface User {
   id: number;
   avatarUrl: string;
   nickName: string;
-  gender:number;
+  gender: number;
   account: string;
   role: number;
   status: number;
@@ -38,11 +38,13 @@ export const GetUsers = async (
 
 export interface UpdateRequest {
   id: number;
-  nickName: string;
-  gender:number;
-  role: number;
-  status: number;
-  resetPassword: boolean; 
+  nickName?: string;
+  gender?: number;
+  role?: number;
+  avatarUrl?: string;
+  status?: number;
+  password?: string; // 密码可选
+  resetPassword?: boolean;
 }
 
 export const UpdateUser = async (data: UpdateRequest): Promise<number> => {
