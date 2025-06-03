@@ -6,14 +6,14 @@ import styles from "./logincard.module.scss";
 import { ScrollText } from "lucide-react";
 
 const avatarOptions = [
-    { label: '头像1', value: 'http://swcdmmvtq.hd-bkt.clouddn.com/a1.jpeg?...' },
-    { label: '头像2', value: 'http://swcdmmvtq.hd-bkt.clouddn.com/a2.jpeg?...' },
-    { label: '头像3', value: 'http://swcdmmvtq.hd-bkt.clouddn.com/a3.jpeg?...' },
-    { label: '头像4', value: 'http://swcdmmvtq.hd-bkt.clouddn.com/a4.jpeg?...' },
-    { label: '头像5', value: 'http://swcdmmvtq.hd-bkt.clouddn.com/a5.webp?...' },
-    { label: '头像6', value: 'http://swcdmmvtq.hd-bkt.clouddn.com/a6.webp?...' },
-    { label: '头像7', value: 'http://swcdmmvtq.hd-bkt.clouddn.com/a7.jpg?...' },
-    { label: '头像8', value: 'http://swcdmmvtq.hd-bkt.clouddn.com/a8.webp?...' },
+    { label: '头像1', value: 'http://sx9p5evb3.hn-bkt.clouddn.com/a1.jpeg?e=1748933740&token=u3VlIXDm55LLiax5RIVxFMHjz601gXy0fHGDQdjT:coL8miXSijAWL6f_Wa4wNVi-t-4=' },
+    { label: '头像2', value: 'http://sx9p5evb3.hn-bkt.clouddn.com/a2.jpeg?e=1748933812&token=u3VlIXDm55LLiax5RIVxFMHjz601gXy0fHGDQdjT:7oYDzxtEzKxm2JKXq6-NY5fp43k=' },
+    { label: '头像3', value: 'http://sx9p5evb3.hn-bkt.clouddn.com/a3.jpeg?e=1748933858&token=u3VlIXDm55LLiax5RIVxFMHjz601gXy0fHGDQdjT:dSr2kMDzRdeJMnIDZlThbMfjcZo=' },
+    { label: '头像4', value: 'http://sx9p5evb3.hn-bkt.clouddn.com/a4.jpeg?e=1748933892&token=u3VlIXDm55LLiax5RIVxFMHjz601gXy0fHGDQdjT:Zf1Wf_UG2fN_O9qmwrjnFLy5eTo=' },
+    { label: '头像5', value: 'http://sx9p5evb3.hn-bkt.clouddn.com/a5.webp?e=1748933919&token=u3VlIXDm55LLiax5RIVxFMHjz601gXy0fHGDQdjT:3gfHHqbtTso09Us_JFKEHnqwZaw=' },
+    { label: '头像6', value: 'http://sx9p5evb3.hn-bkt.clouddn.com/a6.webp?e=1748933955&token=u3VlIXDm55LLiax5RIVxFMHjz601gXy0fHGDQdjT:t2n_mbYOhSyQZK_iP-vb4c165G8=' },
+    { label: '头像7', value: 'http://sx9p5evb3.hn-bkt.clouddn.com/a7.jpg?e=1748933983&token=u3VlIXDm55LLiax5RIVxFMHjz601gXy0fHGDQdjT:aAVG7QHPd-vAaIPcjeJ_FL4A6KY=' },
+    { label: '头像8', value: 'http://sx9p5evb3.hn-bkt.clouddn.com/a8.webp?e=1748934035&token=u3VlIXDm55LLiax5RIVxFMHjz601gXy0fHGDQdjT:Dw_Pz02dxG9yxL0RfG4bbEffImY=' },
 ];
 
 const LoginCard: FC = () => {
